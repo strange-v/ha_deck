@@ -3,6 +3,7 @@
 Config-driven Home Assistant dashboard (built on top of ESPHome using LVGL).
 
 ![HA Deck dashboard exampl](/images/ha_deck.jpg)
+[Demo video](https://www.youtube.com/watch?v=NPr9ryyTVB4)
 
 ## How it works
 
