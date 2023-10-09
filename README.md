@@ -1,6 +1,8 @@
 # Home Assistant Deck
 
-Config-driven Home Assistant dashboard (built on top of ESPHome using LVGL)
+Config-driven Home Assistant dashboard (built on top of ESPHome using LVGL).
+
+![HA Deck dashboard exampl](/images/ha_deck.jpg)
 
 ## How it works
 
