@@ -13,9 +13,13 @@ The HA Deck comprises of two components: hd_device_[name] and ha_deck itself. Th
 - Exposes display brightness so it can be changed by other components.
 - Incapsulates a background image and fonts.
 
-As of today, only the WT32-SC01 PLUS (ESP32-S3, 3.5", 480x320) component exists. The ZX3D95CE01S-AR-4848 (ESP32-S3, 4", 480x480) will be added next.
+The ha_deck component renders all widgets, switches screens, and controls inactivity behavior.
 
-The ha_deck  component renders all widgets, switches screens, and controls inactivity behavior.
+## Supported devices
+
+- WT32-SC01 PLUS (ESP32-S3, 3.5", 480x320)
+- WT32S3-86S/ZX3D95CE01S-AR-4848 (ESP32-S3, 4", 480x480) - **not fully tested**
+  *As of today, only the hardware component has been added. HA Deck doesn't auto-scale widget size based on screen resolution, so sliders will look odd when the default parameters are used with a larger (480x480) display.*
 
 ## How to use
 
@@ -61,8 +65,20 @@ ha_deck:
 
 Make sure you have enough space on the app partitions, as pre-compiled fonts require a lot of space. The icon font contains [common home-based icons](https://pictogrammers.com/docs/library/mdi/guides/home-assistant). You can search icons [here](https://pictogrammers.com/library/mdi/), but make sure they belong to a common home-based icons subset.
 
+## Important note about PSRAM
+
+If a device has PSRAM, it is better to enable it. In the case of a big screen, the display won't work without PSRAM. The configuration below is for WT32S3-86S.
+
+```yaml
+esphome:
+  name: device_name
+  friendly_name: device_friendly_name
+  platformio_options:
+    board_build.arduino.memory_type: qio_opi
+```
+
 ## Further development
 
-I'll use HA Deck to build per-room dashboards in my apartment. So, for sure, fixes, additional widgets (e.g., to control warm floors), and at least one new hardware component (for the mentioned 4" 480x480 panel) will be added.
+I'll use HA Deck to build per-room dashboards in my apartment. So, for sure, fixes and additional widgets (e.g., to control warm floors) will be added.
 
 But overall, the approach implemented here isn't correct and goes against ESPHome's architecture. Additionally, it has many limitations, including no support for user-defined images and fonts. Currently, [Clyde Stubbs](https://github.com/clydebarrow) is working on bringing LVGL support to ESPHome in the correct way (through the display component). After this is done (including further performance improvements in the ESPHome display part), the HA Deck may become useless. If not, I'll consider migrating it to use the display component.
