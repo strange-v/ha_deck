@@ -34,11 +34,11 @@ The ha_deck component renders all widgets, switches screens, and controls inacti
     sda: GPIO33
     scl: GPIO32
     scan: true
-    id: i2c_a```
+    id: i2c_a
+```
 
   Sunton Esp32 8048S043C (esp32_8048s043c, 4.3", 800x480) - **no background image provided**
 ```yaml
-
   esp32:
     board: esp32-s3-devkitc-1
     variant: esp32s3
@@ -54,7 +54,8 @@ The ha_deck component renders all widgets, switches screens, and controls inacti
       board_upload.maximum_size: 16777216
       board_upload.maximum_ram_size: 8388608*
     
-  psram:```
+  psram:
+```
 
 ## How to use
 
