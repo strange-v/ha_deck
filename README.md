@@ -20,7 +20,7 @@ The ha_deck component renders all widgets, switches screens, and controls inacti
 - WT32-SC01 PLUS (ESP32-S3, 3.5", 480x320)
 - WT32S3-86S/ZX3D95CE01S-AR-4848 (ESP32-S3, 4", 480x480) - **not fully tested**
   *As of today, only the hardware component has been added. HA Deck doesn't auto-scale widget size based on screen resolution, so sliders will look odd when the default parameters are used with a larger (480x480) display.*
-  Sunton ESP32 3248S035C (ESP32, 3.5", 480x320) - **Only 4MB flash!**
+- Sunton ESP32 3248S035C (ESP32, 3.5", 480x320) - **Only 4MB flash!**
 ```yaml
   esp32:
     board: esp32dev  
@@ -41,7 +41,7 @@ The ha_deck component renders all widgets, switches screens, and controls inacti
     id: i2c_a
 ```
 
-  Sunton Esp32 8048S043C (ESP3-S3, 4.3", 800x480) - **no background image provided**
+- Sunton Esp32 8048S043C (ESP3-S3, 4.3", 800x480) - **no background image provided**
 ```yaml
   esp32:
     board: esp32-s3-devkitc-1
