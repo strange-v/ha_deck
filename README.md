@@ -20,6 +20,40 @@ The ha_deck component renders all widgets, switches screens, and controls inacti
 - WT32-SC01 PLUS (ESP32-S3, 3.5", 480x320)
 - WT32S3-86S/ZX3D95CE01S-AR-4848 (ESP32-S3, 4", 480x480) - **not fully tested**
   *As of today, only the hardware component has been added. HA Deck doesn't auto-scale widget size based on screen resolution, so sliders will look odd when the default parameters are used with a larger (480x480) display.*
+  Sunton ESP32 3248S035C (esp32_3248s035c, 3.5", 480x320)
+  * use this in yaml:
+  esp32:
+    board: esp32dev  
+
+  spi:
+    clk_pin: GPIO14
+    mosi_pin: GPIO13
+    miso_pin: GPIO12
+
+  i2c:
+    sda: GPIO33
+    scl: GPIO32
+    scan: true
+    id: i2c_a*
+
+  Sunton Esp32 8048S043C (esp32_8048s043c, 4.3", 800x480) - ** no background image provided **
+  * use this in yaml:
+  esp32:
+    board: esp32-s3-devkitc-1
+    variant: esp32s3
+    framework:
+      type: arduino
+
+  esphome:
+    ......
+    platformio_options:
+      board_build.arduino.memory_type: dio_opi
+      board_upload.flash_size: 16MB
+      board_build.partitions: default_16MB.csv
+      board_upload.maximum_size: 16777216
+      board_upload.maximum_ram_size: 8388608*
+    
+  psram:*
 
 ## How to use
 
