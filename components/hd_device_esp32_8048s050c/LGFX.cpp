@@ -51,7 +51,7 @@ LGFX::LGFX(void)
     cfg.pin_vsync   = GPIO_NUM_41;
     cfg.pin_hsync   = GPIO_NUM_39;
     cfg.pin_pclk    = GPIO_NUM_42;
-    cfg.freq_write  = 12000000; // NB Changed from 14...!
+    cfg.freq_write  = 16000000; // NB Changed from 14...!
 
     cfg.hsync_polarity    = 0;
     cfg.hsync_front_porch = 8;
@@ -76,9 +76,9 @@ LGFX::LGFX(void)
   {
     auto cfg = _touch_instance.config();
     cfg.x_min      = 0;
-    cfg.x_max      = 478;
+    cfg.x_max      = 799;
     cfg.y_min      = 0;
-    cfg.y_max      = 269;
+    cfg.y_max      = 479;
     cfg.pin_int    = GPIO_NUM_18;
     cfg.bus_shared = false;
     cfg.offset_rotation = 0;

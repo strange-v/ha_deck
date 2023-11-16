@@ -1,4 +1,4 @@
-#include "hd_device_esp32_8048s043c.h"
+#include "hd_device_esp32_8048s070c.h"
 
 namespace esphome {
 namespace hd_device {
