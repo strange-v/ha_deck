@@ -20,46 +20,14 @@ The ha_deck component renders all widgets, switches screens, and controls inacti
 - WT32-SC01 PLUS (ESP32-S3, 3.5", 480x320)
 - WT32S3-86S/ZX3D95CE01S-AR-4848 (ESP32-S3, 4", 480x480) - **not fully tested**
   *As of today, only the hardware component has been added. HA Deck doesn't auto-scale widget size based on screen resolution, so sliders will look odd when the default parameters are used with a larger (480x480) display.*
+
+**Added by ToViNi (Se example yaml code for board config):**
+
 - Sunton ESP32-3248S035C (ESP32, 3.5", 480x320) - **Only 4MB flash!**
-```yaml
-  esp32:
-    board: esp32dev  
-
-  esphome:
-    platformio_options:
-      board_build.partitions: "/config/esphome/custom_nospiff.csv"
-
-  spi:
-    clk_pin: GPIO14
-    mosi_pin: GPIO13
-    miso_pin: GPIO12
-
-  i2c:
-    sda: GPIO33
-    scl: GPIO32
-    scan: true
-    id: i2c_a
-```
-
 - Sunton Esp32-8048S043C (ESP3-S3, 4.3", 800x480) - **no background image provided**
-```yaml
-  esp32:
-    board: esp32-s3-devkitc-1
-    variant: esp32s3
-    framework:
-      type: arduino
-
-  esphome:
-    // ......
-    platformio_options:
-      board_build.arduino.memory_type: dio_opi
-      board_upload.flash_size: 16MB
-      board_build.partitions: default_16MB.csv
-      board_upload.maximum_size: 16777216
-      board_upload.maximum_ram_size: 8388608
-    
-  psram:
-```
+- Sunton Esp32-8048S050C (ESP3-S3, 5.0", 800x480) - **no background image provided**
+- Sunton Esp32-8048S070C (ESP3-S3, 7.0", 800x480) - **no background image provided**
+- WT32-SC01 (ESP32, 3.5", 480x320) - **Only 4MB flash!**
 
 ## How to use
 
