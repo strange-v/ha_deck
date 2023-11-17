@@ -1,0 +1,376 @@
+substitutions:
+  devicename: test
+  friendly:   WT32-SC01
+  upper_devicename: WT32-SC01
+  comment:    "WT32-SC01"
+  ip_adr: !secret suntontest5
+  SCREEN_MAIN: master
+  SCREEN_ROOMS: rooms
+  SCREEN_KITCHEN: sliders
+  SCREEN_LED: led
+
+esp32:
+  board: esp-wrover-kit
+  framework:
+    type: arduino
+
+esphome:
+  # Device hostname
+  name: $devicename
+  friendly_name: $friendly
+  comment: $comment
+  on_boot: # Boot task
+    then:
+    - delay: 1.0s
+#    - lambda: "id(id_axp).set_brightness(id(bck).state / 100.0);"
+  platformio_options:
+    board_build.partitions: "/config/esphome/custom_nospiff.csv"
+
+psram:
+
+external_components:
+  - source:
+      type: local
+      path: ha_deck/components/
+    components: [ hd_device_wt32_sc01, ha_deck ]
+
+# Enable logging
+logger:
+  baud_rate: 0 # disable logging over uart
+  deassert_rts_dtr: true
+  level: DEBUG
+  logs:
+#    script: INFO
+    sensor: INFO
+    number: INFO
+#    ct_clamp: INFO
+#    esp32_touch: INFO
+    esp32.preferences: INFO
+    dallasng.sensor: DEBUG
+#    dallasng.sensor: INFO
+#    homeassistant.sensor: INFO
+#    text_sensor: INFO
+    binary_sensor: INFO
+    button: INFO
+    component: ERROR
+
+# Enable Home Assistant API
+api:
+
+# Setup WIFI
+wifi:
+  networks:
+    - ssid:        !secret wifi_ssid2
+      password:    !secret wifi_password2
+    - ssid:        !secret wifi_ssid
+      password:    !secret wifi_password
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Power Fallback Hotspot"
+    password:  !secret OTAPW
+  # Optional manual IP
+  manual_ip:
+    static_ip: $ip_adr
+    subnet:    !secret wifi_mask
+    gateway:   !secret wifi_gw
+    dns1:      !secret wifi_gw
+    
+# Optional web server
+#web_server:
+#  port: 80
+    
+# Enable OTA updates
+ota:
+  password:    !secret OTAPW
+  
+# Portal manual network setup
+captive_portal:
+
+spi:
+  clk_pin: GPIO14
+  mosi_pin: GPIO13
+  miso_pin: GPIO12
+
+i2c:
+  sda: GPIO19
+  scl: GPIO20
+  scan: true
+  id: i2c_a
+
+
+
+time:
+  - platform: homeassistant
+    id: ha_time
+    on_time:
+      - cron: '* * * * * *'
+        then:
+          lambda: |-
+            char buff[10] = "-";
+            auto time = id(ha_time).now();
+            if (time.is_valid())
+              sprintf(buff, "%02d:%02d:%02d", time.hour, time.minute, time.second);
+            id(local_time).set_value(std::string(buff));
+
+
+# Define pins for backlight display and back LED1
+output:
+  - platform: ledc
+    pin: 10
+    id: out_10
+
+number:
+  - platform: template
+    id: screen_brightness
+    name: Active screen brightness
+    min_value: 0
+    max_value: 100
+    step: 5
+    initial_value: 75
+    restore_value: true
+    set_action:
+      - lambda: |-
+          if (!id(deck).get_inactivity())
+            id(device).set_brightness(x);
+  - platform: template
+    id: inactive_screen_brightness
+    name: Inactive screen brightness
+    min_value: 0
+    max_value: 100
+    step: 5
+    initial_value: 20
+    restore_value: true
+    set_action:
+      - lambda: |-
+          if (id(deck).get_inactivity())
+            id(device).set_brightness(x);
+  - platform: template
+    id: dummy_temperature_sensor
+    name: Dummy Temperature
+    min_value: -10
+    max_value: 30
+    step: 0.5
+    initial_value: 20.2
+    optimistic: true
+    mode: box
+
+# Define a monochromatic, dimmable light for the backlight
+light:
+  - platform: monochromatic
+    id: dummy_light
+    name: Dummy
+    output: out_10
+
+
+hd_device_wt32_sc01:
+  id: device
+  brightness: 75
+
+ha_deck:
+  id: deck
+  main_screen: ${SCREEN_MAIN}
+  inactivity:
+    period: 90 # seconds
+    blank_screen: false
+  on_inactivity_change:
+    lambda:  |-
+      if (x) {
+        id(device).set_brightness(id(inactive_screen_brightness).state);
+      } else {
+        id(device).set_brightness(id(screen_brightness).state);
+      }
+  screens:
+    - name: ${SCREEN_MAIN}
+      widgets:
+        - type: value-card
+          id: local_time
+          position: 8, 8
+          dimensions: 228x96
+          text: "Fredrikstad (Norway)"
+          enabled: return true;
+          on_click:
+            - logger.log: "Time clicked"
+        - type: button
+          position: 8, 112
+          text: "Favorite"
+          icon: 󰋑
+          visible: |-
+            return true;
+        - type: value-card
+          id: dummy_temperature
+          position: 126, 112
+          text: Outside
+          icon: 󰔏
+          unit: °C
+          enabled: return true;
+          value: |-
+            char buff[10] = "-";
+            sprintf(buff, "%.1f", id(dummy_temperature_sensor).state);
+            return std::string(buff);
+        - type: button
+          position: 362, 8
+          text: Rooms
+          icon: 󰠡
+          enabled: return true;
+          on_click:
+            lambda: |-
+                id(deck).switch_screen("$SCREEN_ROOMS");
+          on_long_press:
+            - logger.log: "Rooms long pressed"
+        - type: button
+          position: 8, 216
+          text: Dummy
+          icon: 󰝩
+          toggle: true
+          enabled: return true;
+          checked: |-
+            return id(dummy_light).current_values.is_on();
+          on_turn_on:
+            - light.turn_on:
+                id: dummy_light
+                brightness: 100%
+          on_turn_off:
+            - light.turn_off:
+                id: dummy_light
+        - type: button
+          position: 8, 216
+          text: Dummy
+          icon: 󰝩
+          toggle: true
+          enabled: return true;
+          checked: |-
+            return id(dummy_light).current_values.is_on();
+          on_turn_on:
+            - light.turn_on:
+                id: dummy_light
+                brightness: 100%
+          on_turn_off:
+            - light.turn_off:
+                id: dummy_light
+          # on_turn_on:
+          #   homeassistant.service:
+          #     service: light.turn_on
+          #     data:
+          #       entity_id: light.living_room_light
+          # on_turn_off:
+          #   homeassistant.service:
+          #     service: light.turn_off
+          #     data:
+          #       entity_id: light.living_room_light
+        - type: button
+          position: 126, 216
+          text: Brightness
+          icon: 󰖨
+          enabled: return true;
+          on_click:
+            lambda: id(deck).switch_screen("$SCREEN_LED");
+    - name: ${SCREEN_ROOMS}
+      widgets:
+        - type: button
+          position: 8, 8
+          icon: 󰁍
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+        - type: button
+          position: 126, 8
+          text: "Living Room"
+          icon: 󰒹
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+        - type: button
+          position: 244, 8
+          text: "Main Bedroom"
+          icon: 󰿒
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+        - type: button
+          position: 362, 8
+          text: "Kids Bedroom"
+          icon: 󰢠
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+        - type: button
+          position: 8, 112
+          text: "Kitchen"
+          icon: 󰩰
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+        - type: button
+          position: 126, 112
+          text: "Bathroom"
+          icon: 󰦠
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+        - type: button
+          position: 244, 112
+          text: "Toilet"
+          icon: 󰦫
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+        - type: button
+          position: 362, 112
+          text: "Corridor"
+          icon: 󰾑
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+        - type: button
+          position: 8, 216
+          text: "Hallway"
+          icon: 󰷺
+          enabled: |-
+            return true;
+          on_click:
+            then:
+            - lambda: |-
+                id(deck).switch_screen("$SCREEN_MAIN");
+    - name: ${SCREEN_LED}
+      widgets:
+        - type: button
+          position: 0, 0
+          dimensions: 48x320
+          icon: 󰅁
+          enabled: return true;
+          on_click:
+            - lambda: id(deck).switch_screen("$SCREEN_MAIN");
+        - type: slider
+          position: 200, 8
+          dimensions: 100x304
+          text: Brightness
+          min: 0
+          max: 100
+          enabled: return true;
+          value: return id(device).get_brightness();
+          on_change:
+            lambda: id(device).set_brightness(x);
