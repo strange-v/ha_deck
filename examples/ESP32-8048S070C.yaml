@@ -14,7 +14,8 @@ esp32:
   variant: esp32s3
   framework:
     type: arduino
-
+  flash_size: 16MB
+#  partitions: default_16MB.csv
 
 esphome:
   # Device hostname
@@ -24,8 +25,8 @@ esphome:
   platformio_options:
     board_build.arduino.memory_type: dio_opi
     # build_flags: -mfix-esp32-psram-cache-issue
-    board_upload.flash_size: 16MB
-    board_build.partitions: default_16MB.csv
+    #board_upload.flash_size: 16MB
+    #board_build.partitions: default_16MB.csv
     board_upload.maximum_size: 16777216
     board_upload.maximum_ram_size: 8388608
   on_boot: # Boot task
