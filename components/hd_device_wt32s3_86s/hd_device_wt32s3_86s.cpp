@@ -6,7 +6,7 @@ namespace hd_device {
 
 static const char *const TAG = "HD_DEVICE";
 static lv_disp_draw_buf_t draw_buf;
-static lv_color_t *buf = (lv_color_t *)heap_caps_malloc(TFT_HEIGHT * 20 * sizeof(lv_color_t), MALLOC_CAP_DMA);
+static lv_color_t *buf = (lv_color_t *)heap_caps_malloc(TFT_HEIGHT * 48 * sizeof(lv_color_t), MALLOC_CAP_DMA);
 
 LGFX lcd;
 
@@ -33,10 +33,12 @@ void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data
     }
 }
 
-void HaDeckDevice::setup() {
+HaDeckDevice::HaDeckDevice() {
     lv_init();
     lv_theme_default_init(NULL, lv_color_hex(0xFFEB3B), lv_color_hex(0xFF7043), 1, LV_FONT_DEFAULT);
+}
 
+void HaDeckDevice::setup() {
     lcd.init();
 
     lv_disp_draw_buf_init(&draw_buf, buf, NULL, TFT_HEIGHT * 20);
@@ -45,8 +47,6 @@ void HaDeckDevice::setup() {
     lv_disp_drv_init(&disp_drv);
     disp_drv.hor_res = TFT_WIDTH;
     disp_drv.ver_res = TFT_HEIGHT;
-    // disp_drv.rotated = 1;
-    // disp_drv.sw_rotate = 1;
     disp_drv.flush_cb = flush_pixels;
     disp_drv.draw_buf = &draw_buf;
     lv_disp_t *disp = lv_disp_drv_register(&disp_drv);
@@ -61,8 +61,6 @@ void HaDeckDevice::setup() {
 
     group = lv_group_create();
     lv_group_set_default(group);
-
-    lcd.setBrightness(brightness_);
 
     auto bg_image = lv_img_create(lv_scr_act());
     lv_img_set_src(bg_image, &bg_default);
@@ -80,15 +78,6 @@ void HaDeckDevice::loop() {
 }
 
 float HaDeckDevice::get_setup_priority() const { return setup_priority::DATA; }
-
-uint8_t HaDeckDevice::get_brightness() {
-    return brightness_;
-}
-
-void HaDeckDevice::set_brightness(uint8_t value) {
-    brightness_ = value;
-    lcd.setBrightness(brightness_);
-}
 
 }  // namespace hd_device
 }  // namespace esphome

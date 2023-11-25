@@ -6,8 +6,7 @@ import esphome.core as core
 import esphome.core.config as cfg
 from esphome.core import CORE, coroutine_with_priority
 from esphome.const import (
-    CONF_ID,
-    CONF_BRIGHTNESS
+    CONF_ID
 )
 
 CODEOWNERS = ["@strange-v"]
@@ -18,12 +17,10 @@ HaDeckDevice = hd_device_ns.class_("HaDeckDevice", cg.Component)
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(HaDeckDevice),
-        cv.Required(CONF_BRIGHTNESS): cv.int_range(min=0, max=100),
     }
 )
 
 LVGL_BUILD_FLAGS = [
-    "-D LV_USE_DEV_VERSION=1",
     "-D LV_LVGL_H_INCLUDE_SIMPLE=1",
     "-D LGFX_USE_V1=1",
 ]
@@ -42,6 +39,3 @@ async def to_code(config):
 
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
-
-    brightness = config.get(CONF_BRIGHTNESS)
-    cg.add(var.set_brightness(brightness))

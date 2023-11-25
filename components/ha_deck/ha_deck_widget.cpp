@@ -3,8 +3,11 @@
 namespace esphome {
 namespace ha_deck {
 
-void HaDeckWidget::setup() { 
-    
+HaDeckWidget::HaDeckWidget() {
+    auto buff = heap_caps_malloc(1024, MALLOC_CAP_DMA);
+}
+
+void HaDeckWidget::setup() {
 }
 
 void HaDeckWidget::loop() {
@@ -37,14 +40,18 @@ void HaDeckWidget::render() {
     if (rendered_)
         return;
 
-    rendered_ = true;    
+    rendered_ = true;
     render_();
+
+    auto style = style_manager_->get_style(style_);
+    if (style)
+        apply_style_(style);
 }
 
 void HaDeckWidget::destroy() {
     if (!rendered_)
         return;
-    
+
     rendered_ = false;
     destroy_();
 }
@@ -59,12 +66,110 @@ void HaDeckWidget::set_enabled(bool enabled) {
     set_enabled_(enabled);
 }
 
+void HaDeckWidget::set_style(std::string name) {
+    style_ = name;
+}
+
 void HaDeckWidget::add_visible_lambda(std::function<optional<bool>()> &&f) {
     visible_fn_ = f;
 }
 
 void HaDeckWidget::add_enabled_lambda(std::function<optional<bool>()> &&f) {
     enabled_fn_ = f;
+}
+
+void HaDeckWidget::add_style_manager(StyleManager *style_manager)
+{
+    style_manager_ = style_manager;
+}
+
+
+HaDeckWidgetStyle::HaDeckWidgetStyle()
+{
+    lv_style_init(&main_def_);
+    lv_style_init(&main_disabled_);
+    lv_style_init(&main_checked_);
+    main_.def = &main_def_;
+    main_.disabled = &main_disabled_;
+    main_.checked = &main_checked_;
+}
+StyleGroup *HaDeckWidgetStyle::get_main() {
+    return &main_;
+}
+void HaDeckWidgetStyle::set_border_radius(uint8_t value, lv_state_t selector) {
+    set_border_radius_(&main_, value, selector);
+}
+void HaDeckWidgetStyle::set_bg_color(uint32_t value, lv_state_t selector) {
+    set_bg_color_(&main_, value, selector);
+}
+void HaDeckWidgetStyle::set_bg_opacity(uint8_t value, lv_state_t selector) {
+    set_bg_opacity_(&main_, value, selector);
+}
+void HaDeckWidgetStyle::set_color(uint32_t value, lv_state_t selector)
+{
+    set_color_(&main_, value, selector);
+}
+void HaDeckWidgetStyle::set_opacity(uint8_t value, lv_state_t selector)
+{
+    set_opacity_(&main_, value, selector);
+}
+
+void HaDeckWidgetStyle::set_border_radius_(StyleGroup *style, uint8_t value, lv_state_t selector) {
+    if (selector & LV_STATE_DEFAULT) {
+        lv_style_set_radius(style->def, value);
+    }
+    if (selector & LV_STATE_DISABLED) {
+        lv_style_set_radius(style->disabled, value);
+    }
+    if (selector & LV_STATE_CHECKED) {
+        lv_style_set_radius(style->checked, value);
+    }
+}
+void HaDeckWidgetStyle::set_bg_color_(StyleGroup *style, uint32_t value, lv_state_t selector) {
+    if (selector == LV_STATE_DEFAULT) {
+        lv_style_set_bg_color(style->def, lv_color_hex(value));
+    }
+    if (selector & LV_STATE_DISABLED) {
+        lv_style_set_bg_color(style->disabled, lv_color_hex(value));
+    }
+    if (selector & LV_STATE_CHECKED) {
+        lv_style_set_bg_color(style->checked, lv_color_hex(value));
+    }
+}
+void HaDeckWidgetStyle::set_bg_opacity_(StyleGroup *style, uint8_t value, lv_state_t selector) {
+    if (selector == LV_STATE_DEFAULT) {
+        lv_style_set_bg_opa(style->def, value);
+    }
+    if (selector & LV_STATE_DISABLED) {
+        lv_style_set_bg_opa(style->disabled, value);
+    }
+    if (selector & LV_STATE_CHECKED) {
+        lv_style_set_bg_opa(style->checked, value);
+    }
+}
+void HaDeckWidgetStyle::set_color_(StyleGroup *style, uint32_t value, lv_state_t selector)
+{
+    if (selector == LV_STATE_DEFAULT) {
+        lv_style_set_text_color(style->def, lv_color_hex(value));
+    }
+    if (selector & LV_STATE_DISABLED) {
+        lv_style_set_text_color(style->disabled, lv_color_hex(value));
+    }
+    if (selector & LV_STATE_CHECKED) {
+        lv_style_set_text_color(style->checked, lv_color_hex(value));
+    }
+}
+void HaDeckWidgetStyle::set_opacity_(StyleGroup *style, uint8_t value, lv_state_t selector)
+{
+    if (selector == LV_STATE_DEFAULT) {
+        lv_style_set_text_opa(style->def, value);
+    }
+    if (selector & LV_STATE_DISABLED) {
+        lv_style_set_text_opa(style->disabled, value);
+    }
+    if (selector & LV_STATE_CHECKED) {
+        lv_style_set_text_opa(style->checked, value);
+    }
 }
 
 }  // namespace ha_deck

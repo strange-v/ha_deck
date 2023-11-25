@@ -69,9 +69,7 @@ void HaDeckDevice::setup() {
     group = lv_group_create();
     lv_group_set_default(group);
 
-    lcd.setBrightness(brightness_);
-
-    lv_obj_t * bg_image = lv_img_create(lv_scr_act());
+    auto bg_image = lv_img_create(lv_scr_act());
     lv_img_set_src(bg_image, &bg_480x320);
     lv_obj_set_parent(bg_image, lv_scr_act());
 }
@@ -87,15 +85,6 @@ void HaDeckDevice::loop() {
 }
 
 float HaDeckDevice::get_setup_priority() const { return setup_priority::DATA; }
-
-uint8_t HaDeckDevice::get_brightness() {
-    return brightness_;
-}
-
-void HaDeckDevice::set_brightness(uint8_t value) {
-    brightness_ = value;
-    lcd.setBrightness(brightness_);
-}
 
 }  // namespace hd_device
 }  // namespace esphome

@@ -140,12 +140,13 @@ public:
       _panel_instance.setTouch(&_touch_instance);
     }
 
-    {
-      auto cfg = _light_instance.config();
-      cfg.pin_bl = TFT_BCKL;
-      _light_instance.config(cfg);
-    }
-    _panel_instance.light(&_light_instance);
+    // {
+    //   auto cfg = _light_instance.config();
+    //   cfg.pin_bl = TFT_BCKL;
+    //   cfg.freq = 1000;
+    //   _light_instance.config(cfg);
+    // }
+    // _panel_instance.light(&_light_instance);
 
     setPanel(&_panel_instance);
   }

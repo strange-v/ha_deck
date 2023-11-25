@@ -69,6 +69,19 @@ void HaDeck::add_on_inactivity_change_callback(std::function<void(bool)> &&callb
     inactivity_change_callback_.add(std::move(callback));
 }
 
+HaDeckWidgetStyle *HaDeck::get_style(std::string name)
+{
+    if (!styles_.count(name))
+        return nullptr;
+
+    return styles_[name];
+}
+
+void HaDeck::add_style(std::string name, HaDeckWidgetStyle *style) {
+    ESP_LOGD(this->TAG, "add_style: %s", name.c_str());
+    styles_[name] = style;
+}
+
 void HaDeck::set_inactivity_(bool value) {
     if (inactivity_ == value)
         return;

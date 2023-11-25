@@ -14,6 +14,7 @@ public:
     bool is_checked();
 
     void add_checked_lambda(std::function<optional<bool>()> &&f);
+    void add_icon_color_lambda(std::function<optional<uint32_t>()> &&f);
     void add_on_click_callback(std::function<void()> &&callback);
     void add_on_turn_on_callback(std::function<void()> &&callback);
     void add_on_turn_off_callback(std::function<void()> &&callback);
@@ -24,6 +25,7 @@ protected:
     void update_();
     void set_visible_(bool visible);
     void set_enabled_(bool enabled);
+    void apply_style_(HaDeckWidgetStyle *style);
 private:
     static void on_click_(lv_event_t *e);
     static void on_long_press_(lv_event_t *e);
@@ -37,13 +39,45 @@ private:
     bool long_pressed_ = false;
     std::string text_;
     std::string icon_;
-    lv_obj_t *button_;
+    lv_obj_t *lv_button_;
+    lv_obj_t *lv_icon_;
+    lv_obj_t *lv_label_;
 
     std::function<optional<bool>()> checked_fn_ = nullptr;
+    std::function<optional<uint32_t>()> icon_color_fn_ = nullptr;
     CallbackManager<void()> click_callback_{};
     CallbackManager<void()> turn_on_callback_{};
     CallbackManager<void()> turn_off_callback_{};
     CallbackManager<void()> long_press_callback_{};
+};
+
+class HdButtonStyle : public HaDeckWidgetStyle
+{
+public:
+    HdButtonStyle();
+    StyleGroup *get_text();
+    StyleGroup *get_icon();
+
+    void set_text_border_radius(uint8_t value, lv_state_t selector);
+    void set_text_bg_color(uint32_t value, lv_state_t selector);
+    void set_text_bg_opacity(uint8_t value, lv_state_t selector);
+    void set_text_color(uint32_t value, lv_state_t selector);
+    void set_text_opacity(uint8_t value, lv_state_t selector);
+
+    void set_icon_border_radius(uint8_t value, lv_state_t selector);
+    void set_icon_bg_color(uint32_t value, lv_state_t selector);
+    void set_icon_bg_opacity(uint8_t value, lv_state_t selector);
+    void set_icon_color(uint32_t value, lv_state_t selector);
+    void set_icon_opacity(uint8_t value, lv_state_t selector);
+private:
+    lv_style_t text_def_;
+    lv_style_t text_disabled_;
+    lv_style_t text_checked_;
+    StyleGroup text_ = {};
+    lv_style_t icon_def_;
+    lv_style_t icon_disabled_;
+    lv_style_t icon_checked_;
+    StyleGroup icon_ = {};
 };
 
 }  // namespace ha_deck

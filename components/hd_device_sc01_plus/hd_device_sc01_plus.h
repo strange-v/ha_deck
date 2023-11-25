@@ -17,11 +17,8 @@ public:
     void setup() override;
     void loop() override;
     float get_setup_priority() const override;
-    uint8_t get_brightness();
-    void set_brightness(uint8_t value);
 private:
     unsigned long time_ = 0;
-    uint8_t brightness_ = 0;
 };
 
 }  // namespace hd_device

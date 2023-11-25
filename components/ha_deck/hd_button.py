@@ -3,14 +3,19 @@ import esphome.config_validation as cv
 from esphome import automation
 from esphome.automation import Condition, maybe_simple_id
 from esphome.const import (
+    CONF_COLOR,
     CONF_ID,
     CONF_ICON,
     CONF_TRIGGER_ID,
 )
 
-from .ha_deck import ha_deck_ns, HaDeckWidget
+from .ha_deck import ha_deck_ns, HaDeckWidget, HaDeckWidgetStyle, supported_state, get_style_state
+from .ha_deck import COMMON_STYLE_PROPERTIES_SCHEMA, CONF_STATE, CONF_BORDER_RADIUS, \
+    CONF_BG_COLOR, CONF_OPACITY, CONF_BG_OPACITY
 
 HdButton = ha_deck_ns.class_("HdButton", HaDeckWidget)
+HdButtonStyle = ha_deck_ns.class_("HdButtonStyle", HaDeckWidgetStyle)
+
 ClickAction = ha_deck_ns.class_("ClickAction", automation.Action)
 TurnOnAction = ha_deck_ns.class_("TurnOnAction", automation.Action)
 TurnOffAction = ha_deck_ns.class_("TurnOffAction", automation.Action)
@@ -32,11 +37,34 @@ ButtonLongPressTrigger = ha_deck_ns.class_(
 
 CONF_TEXT = "text"
 CONF_TOGGLE = "toggle"
+CONF_TEXT_COLOR = "text_color"
+CONF_ICON_COLOR = "icon_color"
+CONF_BG_COLOR_CHECKED = "bg-color-checked"
+CONF_BG_OPACITY_CHECKED = "bg-opacity-checked"
+CONF_OPACITY = "opacity"
 CONF_CHECKED = "checked"
 CONF_ON_CLICK = "on_click"
 CONF_ON_TURN_ON = "on_turn_on"
 CONF_ON_TURN_OFF = "on_turn_off"
 CONF_ON_LONG_PRESS = "on_long_press"
+
+COLOR_AND_OPACITY_SCHEMA = cv.Schema(
+    {
+        cv.Optional(CONF_COLOR): cv.hex_int,
+        cv.Optional(CONF_OPACITY): cv.hex_int,
+    }
+)
+BUTTON_STYLE_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(CONF_ID): cv.declare_id(HdButtonStyle),
+        cv.Optional(CONF_TEXT): cv.All(
+            cv.ensure_list(COMMON_STYLE_PROPERTIES_SCHEMA),
+        ),
+        cv.Optional(CONF_ICON): cv.All(
+            cv.ensure_list(COMMON_STYLE_PROPERTIES_SCHEMA),
+        ),
+    }
+)
 
 BUTTON_CONFIG_SCHEMA = cv.Schema(
     {
@@ -44,6 +72,8 @@ BUTTON_CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_TEXT): cv.string,
         cv.Optional(CONF_ICON): cv.string,
         cv.Optional(CONF_TOGGLE): cv.boolean,
+        cv.Optional(CONF_TEXT_COLOR): cv.hex_int,
+        cv.Optional(CONF_ICON_COLOR): cv.hex_int,
         cv.Optional(CONF_CHECKED): cv.returning_lambda,
         cv.Optional(CONF_ON_CLICK): automation.validate_automation(
             {
@@ -68,6 +98,46 @@ BUTTON_CONFIG_SCHEMA = cv.Schema(
     }
 )
 
+async def text_styles_to_code(style, config):
+    for item in config:
+        state = supported_state["DEFAULT"]
+        if CONF_STATE in item:
+            state = supported_state[item[CONF_STATE]]
+        
+        if CONF_BORDER_RADIUS in item:
+            cg.add(style.set_text_border_radius(item[CONF_BORDER_RADIUS], state))
+        if CONF_BG_COLOR in item:
+            cg.add(style.set_text_bg_color(item[CONF_BG_COLOR], state))
+        if CONF_BG_OPACITY in item:
+            cg.add(style.set_text_bg_opacity(item[CONF_BG_OPACITY]), state)
+        if CONF_COLOR in item:
+            cg.add(style.set_text_color(item[CONF_COLOR], state))
+        if CONF_OPACITY in item:
+            cg.add(style.set_text_opacity(item[CONF_OPACITY]), state)
+
+async def icon_styles_to_code(style, config):
+    for item in config:
+        state = supported_state["DEFAULT"]
+        if CONF_STATE in item:
+            state = supported_state[item[CONF_STATE]]
+        
+        if CONF_BORDER_RADIUS in item:
+            cg.add(style.set_icon_border_radius(item[CONF_BORDER_RADIUS], state))
+        if CONF_BG_COLOR in item:
+            cg.add(style.set_icon_bg_color(item[CONF_BG_COLOR], state))
+        if CONF_BG_OPACITY in item:
+            cg.add(style.set_icon_bg_opacity(item[CONF_BG_OPACITY]), state)
+        if CONF_COLOR in item:
+            cg.add(style.set_icon_color(item[CONF_COLOR], state))
+        if CONF_OPACITY in item:
+            cg.add(style.set_icon_opacity(item[CONF_OPACITY]), state)
+
+async def build_button_style(style, config):
+    if CONF_TEXT in config:
+        await text_styles_to_code(style, config[CONF_TEXT])
+    if CONF_ICON in config:
+        await icon_styles_to_code(style, config[CONF_ICON])
+
 async def build_button(var, config):
     if text := config.get(CONF_TEXT):
         cg.add(var.set_text(text))
@@ -75,6 +145,10 @@ async def build_button(var, config):
         cg.add(var.set_icon(icon))
     if toggle := config.get(CONF_TOGGLE):
         cg.add(var.set_toggle(toggle))
+    if text_color := config.get(CONF_TEXT_COLOR):
+        cg.add(var.set_text_color(text_color))
+    if icon_color := config.get(CONF_ICON_COLOR):
+        cg.add(var.set_icon_color(icon_color))
     
     if CONF_CHECKED in config:
         checked = await cg.process_lambda(

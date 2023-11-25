@@ -7,7 +7,7 @@
 namespace esphome {
 namespace ha_deck {
 
-class HaDeck : public Component
+class HaDeck : public Component, public StyleManager
 {
 public:
     void setup() override;
@@ -18,8 +18,11 @@ public:
     void set_inactivity_blank_screen(bool value);
     bool get_inactivity();
     void add_screen(HaDeckScreen *screen);
+    void add_style(std::string name, HaDeckWidgetStyle *style);
     void switch_screen(std::string name);
     void add_on_inactivity_change_callback(std::function<void(bool)> &&callback);
+
+    HaDeckWidgetStyle *get_style(std::string name);
 private:
     void set_inactivity_(bool value);
     void create_inactivity_screen_();
@@ -33,6 +36,7 @@ private:
     bool inactivity_ = false;
 
     std::map<std::string, HaDeckScreen*> screens_ = {};
+    std::map<std::string, HaDeckWidgetStyle*> styles_ = {};
     HaDeckScreen *active_screen_ = nullptr;
     lv_obj_t *lvgl_main_screen_ = nullptr;
     lv_obj_t *lvgl_inactivity_screen_ = nullptr;
