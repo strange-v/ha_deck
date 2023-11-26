@@ -55,29 +55,6 @@ class HdButtonStyle : public HaDeckWidgetStyle
 {
 public:
     HdButtonStyle();
-    StyleGroup *get_text();
-    StyleGroup *get_icon();
-
-    void set_text_border_radius(uint8_t value, lv_state_t selector);
-    void set_text_bg_color(uint32_t value, lv_state_t selector);
-    void set_text_bg_opacity(uint8_t value, lv_state_t selector);
-    void set_text_color(uint32_t value, lv_state_t selector);
-    void set_text_opacity(uint8_t value, lv_state_t selector);
-
-    void set_icon_border_radius(uint8_t value, lv_state_t selector);
-    void set_icon_bg_color(uint32_t value, lv_state_t selector);
-    void set_icon_bg_opacity(uint8_t value, lv_state_t selector);
-    void set_icon_color(uint32_t value, lv_state_t selector);
-    void set_icon_opacity(uint8_t value, lv_state_t selector);
-private:
-    lv_style_t text_def_;
-    lv_style_t text_disabled_;
-    lv_style_t text_checked_;
-    StyleGroup text_ = {};
-    lv_style_t icon_def_;
-    lv_style_t icon_disabled_;
-    lv_style_t icon_checked_;
-    StyleGroup icon_ = {};
 };
 
 }  // namespace ha_deck

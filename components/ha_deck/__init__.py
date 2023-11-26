@@ -17,9 +17,9 @@ from esphome.const import (
     CONF_PERIOD,
 )
 from esphome.core import CORE, coroutine_with_priority
-from .ha_deck import ha_deck_ns, HaDeck, HaDeckScreen, COMMON_STYLE_PROPERTIES_SCHEMA, CONF_STATE, main_styles_to_code
+from .ha_deck import ha_deck_ns, HaDeck, HaDeckScreen, COMMON_STYLE_PROPERTIES_SCHEMA, common_styles_to_code
 from .hd_button import BUTTON_CONFIG_SCHEMA, BUTTON_STYLE_SCHEMA, build_button, build_button_style
-from .hd_slider import SLIDER_CONFIG_SCHEMA, build_slider
+from .hd_slider import SLIDER_CONFIG_SCHEMA, SLIDER_STYLE_SCHEMA, build_slider, build_slider_style
 from .hd_value_card import VALUE_CARD_CONFIG_SCHEMA, build_value_card
 
 CODEOWNERS = ["@strange-v"]
@@ -71,7 +71,7 @@ WIDGET_BUILDERS = {
 
 WIDGET_STYLE_BUILDERS = {
     CONF_BUTTON: build_button_style,
-    # CONF_SLIDER: build_slider,
+    CONF_SLIDER: build_slider_style,
     # CONF_VALUE_CARD: build_value_card,
 }
 
@@ -86,7 +86,7 @@ COMMON_WIDGET_STYLE_SCHEMA = cv.Schema(
 )
 STYLE_SCHEMA = cv.typed_schema({
     CONF_BUTTON: COMMON_WIDGET_STYLE_SCHEMA.extend(BUTTON_STYLE_SCHEMA),
-    # CONF_SLIDER: COMMON_WIDGET_STYLE_SCHEMA.extend(SLIDER_STYLE_SCHEMA),
+    CONF_SLIDER: COMMON_WIDGET_STYLE_SCHEMA.extend(SLIDER_STYLE_SCHEMA),
     # CONF_VALUE_CARD: COMMON_WIDGET_STYLE_SCHEMA.extend(VALUE_CARD_STYLE_SCHEMA),
 })
 
@@ -200,7 +200,7 @@ async def styles_to_code(deck, config):
         style = cg.new_Pvariable(item[CONF_ID])
 
         if CONF_MAIN in item:
-            await main_styles_to_code(style, item[CONF_MAIN])
+            await common_styles_to_code(style, item[CONF_MAIN], CONF_MAIN)
 
         if item[CONF_TYPE] in WIDGET_STYLE_BUILDERS.keys():
             await WIDGET_STYLE_BUILDERS[item[CONF_TYPE]](style, item)

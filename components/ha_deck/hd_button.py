@@ -9,9 +9,8 @@ from esphome.const import (
     CONF_TRIGGER_ID,
 )
 
-from .ha_deck import ha_deck_ns, HaDeckWidget, HaDeckWidgetStyle, supported_state, get_style_state
-from .ha_deck import COMMON_STYLE_PROPERTIES_SCHEMA, CONF_STATE, CONF_BORDER_RADIUS, \
-    CONF_BG_COLOR, CONF_OPACITY, CONF_BG_OPACITY
+from .ha_deck import ha_deck_ns, HaDeckWidget, HaDeckWidgetStyle, common_styles_to_code
+from .ha_deck import COMMON_STYLE_PROPERTIES_SCHEMA
 
 HdButton = ha_deck_ns.class_("HdButton", HaDeckWidget)
 HdButtonStyle = ha_deck_ns.class_("HdButtonStyle", HaDeckWidgetStyle)
@@ -48,12 +47,6 @@ CONF_ON_TURN_ON = "on_turn_on"
 CONF_ON_TURN_OFF = "on_turn_off"
 CONF_ON_LONG_PRESS = "on_long_press"
 
-COLOR_AND_OPACITY_SCHEMA = cv.Schema(
-    {
-        cv.Optional(CONF_COLOR): cv.hex_int,
-        cv.Optional(CONF_OPACITY): cv.hex_int,
-    }
-)
 BUTTON_STYLE_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_ID): cv.declare_id(HdButtonStyle),
@@ -98,45 +91,45 @@ BUTTON_CONFIG_SCHEMA = cv.Schema(
     }
 )
 
-async def text_styles_to_code(style, config):
-    for item in config:
-        state = supported_state["DEFAULT"]
-        if CONF_STATE in item:
-            state = supported_state[item[CONF_STATE]]
+# async def text_styles_to_code(style, config):
+#     for item in config:
+#         state = supported_state["DEFAULT"]
+#         if CONF_STATE in item:
+#             state = supported_state[item[CONF_STATE]]
         
-        if CONF_BORDER_RADIUS in item:
-            cg.add(style.set_text_border_radius(item[CONF_BORDER_RADIUS], state))
-        if CONF_BG_COLOR in item:
-            cg.add(style.set_text_bg_color(item[CONF_BG_COLOR], state))
-        if CONF_BG_OPACITY in item:
-            cg.add(style.set_text_bg_opacity(item[CONF_BG_OPACITY]), state)
-        if CONF_COLOR in item:
-            cg.add(style.set_text_color(item[CONF_COLOR], state))
-        if CONF_OPACITY in item:
-            cg.add(style.set_text_opacity(item[CONF_OPACITY]), state)
+#         if CONF_BORDER_RADIUS in item:
+#             cg.add(style.set_text_border_radius(item[CONF_BORDER_RADIUS], state))
+#         if CONF_BG_COLOR in item:
+#             cg.add(style.set_text_bg_color(item[CONF_BG_COLOR], state))
+#         if CONF_BG_OPACITY in item:
+#             cg.add(style.set_text_bg_opacity(item[CONF_BG_OPACITY]), state)
+#         if CONF_COLOR in item:
+#             cg.add(style.set_text_color(item[CONF_COLOR], state))
+#         if CONF_OPACITY in item:
+#             cg.add(style.set_text_opacity(item[CONF_OPACITY]), state)
 
-async def icon_styles_to_code(style, config):
-    for item in config:
-        state = supported_state["DEFAULT"]
-        if CONF_STATE in item:
-            state = supported_state[item[CONF_STATE]]
+# async def icon_styles_to_code(style, config):
+#     for item in config:
+#         state = supported_state["DEFAULT"]
+#         if CONF_STATE in item:
+#             state = supported_state[item[CONF_STATE]]
         
-        if CONF_BORDER_RADIUS in item:
-            cg.add(style.set_icon_border_radius(item[CONF_BORDER_RADIUS], state))
-        if CONF_BG_COLOR in item:
-            cg.add(style.set_icon_bg_color(item[CONF_BG_COLOR], state))
-        if CONF_BG_OPACITY in item:
-            cg.add(style.set_icon_bg_opacity(item[CONF_BG_OPACITY]), state)
-        if CONF_COLOR in item:
-            cg.add(style.set_icon_color(item[CONF_COLOR], state))
-        if CONF_OPACITY in item:
-            cg.add(style.set_icon_opacity(item[CONF_OPACITY]), state)
+#         if CONF_BORDER_RADIUS in item:
+#             cg.add(style.set_icon_border_radius(item[CONF_BORDER_RADIUS], state))
+#         if CONF_BG_COLOR in item:
+#             cg.add(style.set_icon_bg_color(item[CONF_BG_COLOR], state))
+#         if CONF_BG_OPACITY in item:
+#             cg.add(style.set_icon_bg_opacity(item[CONF_BG_OPACITY]), state)
+#         if CONF_COLOR in item:
+#             cg.add(style.set_icon_color(item[CONF_COLOR], state))
+#         if CONF_OPACITY in item:
+#             cg.add(style.set_icon_opacity(item[CONF_OPACITY]), state)
 
-async def build_button_style(style, config):
+async def build_button_style(obj, config):
     if CONF_TEXT in config:
-        await text_styles_to_code(style, config[CONF_TEXT])
+        await common_styles_to_code(obj, config[CONF_TEXT], CONF_TEXT)
     if CONF_ICON in config:
-        await icon_styles_to_code(style, config[CONF_ICON])
+        await common_styles_to_code(obj, config[CONF_ICON], CONF_ICON)
 
 async def build_button(var, config):
     if text := config.get(CONF_TEXT):

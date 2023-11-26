@@ -55,20 +55,20 @@ COMMON_STYLE_PROPERTIES_SCHEMA = cv.Schema(
     }
 )
 
-async def main_styles_to_code(style, config):
+async def common_styles_to_code(obj, config, name):
     for item in config:
         state = supported_state["DEFAULT"]
         if CONF_STATE in item:
             state = supported_state[item[CONF_STATE]]
         
         if CONF_BORDER_RADIUS in item:
-            cg.add(style.set_border_radius(item[CONF_BORDER_RADIUS], state))
+            cg.add(obj.set_border_radius(name, item[CONF_BORDER_RADIUS], state))
         if CONF_BG_COLOR in item:
-            cg.add(style.set_bg_color(item[CONF_BG_COLOR], state))
+            cg.add(obj.set_bg_color(name, item[CONF_BG_COLOR], state))
         if CONF_BG_OPACITY in item:
-            cg.add(style.set_bg_opacity(item[CONF_BG_OPACITY], state))
+            cg.add(obj.set_bg_opacity(name, item[CONF_BG_OPACITY], state))
         if CONF_COLOR in item:
-            cg.add(style.set_color(item[CONF_COLOR], state))
+            cg.add(obj.set_color(name, item[CONF_COLOR], state))
         if CONF_OPACITY in item:
-            cg.add(style.set_opacity(item[CONF_OPACITY], state))
+            cg.add(obj.set_opacity(name, item[CONF_OPACITY], state))
             

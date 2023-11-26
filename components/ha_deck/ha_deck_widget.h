@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <string>
+#include <map>
 #include "esphome/core/component.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
@@ -26,24 +27,21 @@ class HaDeckWidgetStyle
 public:
     HaDeckWidgetStyle();
     
-    StyleGroup *get_main();
+    StyleGroup get_style(std::string style);
 
-    void set_border_radius(uint8_t value, lv_state_t selector);
-    void set_bg_color(uint32_t value, lv_state_t selector);
-    void set_bg_opacity(uint8_t value, lv_state_t selector);
-    void set_color(uint32_t value, lv_state_t selector);
-    void set_opacity(uint8_t value, lv_state_t selector);
+    void set_border_radius(std::string style, uint8_t value, lv_state_t selector);
+    void set_bg_color(std::string style, uint32_t value, lv_state_t selector);
+    void set_bg_opacity(std::string style, uint8_t value, lv_state_t selector);
+    void set_color(std::string style, uint32_t value, lv_state_t selector);
+    void set_opacity(std::string style, uint8_t value, lv_state_t selector);
 protected:
-    void set_border_radius_(StyleGroup *style, uint8_t value, lv_state_t selector);
-    void set_bg_color_(StyleGroup *style, uint32_t value, lv_state_t selector);
-    void set_bg_opacity_(StyleGroup *style, uint8_t value, lv_state_t selector);
-    void set_color_(StyleGroup *style, uint32_t value, lv_state_t selector);
-    void set_opacity_(StyleGroup *style, uint8_t value, lv_state_t selector);
+    void set_border_radius_(StyleGroup group, uint8_t value, lv_state_t selector);
+    void set_bg_color_(StyleGroup group, uint32_t value, lv_state_t selector);
+    void set_bg_opacity_(StyleGroup group, uint8_t value, lv_state_t selector);
+    void set_color_(StyleGroup group, uint32_t value, lv_state_t selector);
+    void set_opacity_(StyleGroup group, uint8_t value, lv_state_t selector);
 
-    lv_style_t main_def_ = {};
-    lv_style_t main_disabled_ = {};
-    lv_style_t main_checked_ = {};
-    StyleGroup main_ = {nullptr, nullptr, nullptr};
+    std::map<std::string, StyleGroup> styles_ = {};
 };
 
 class StyleManager

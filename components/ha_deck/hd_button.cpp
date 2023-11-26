@@ -150,26 +150,25 @@ void HdButton::apply_style_(HaDeckWidgetStyle *style)
     if (!button_style)
         return;
 
-    ESP_LOGD(this->TAG, "applying style to widget %s", this->text_.c_str());
-    auto main = button_style->get_main();
-    lv_obj_add_style(lv_button_, main->def, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_add_style(lv_button_, main->disabled, LV_PART_MAIN | LV_STATE_DISABLED);
-    lv_obj_add_style(lv_button_, main->checked, LV_PART_MAIN | LV_STATE_CHECKED);
+    auto main = button_style->get_style("main");
+    lv_obj_add_style(lv_button_, main.def, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_add_style(lv_button_, main.disabled, LV_PART_MAIN | LV_STATE_DISABLED);
+    lv_obj_add_style(lv_button_, main.checked, LV_PART_MAIN | LV_STATE_CHECKED);
 
     bool has_text = !text_.empty();
     bool has_icon = !icon_.empty();
 
     if (has_text) {
-        auto text = button_style->get_text();
-        lv_obj_add_style(lv_label_, text->def, LV_PART_MAIN | LV_STATE_DEFAULT);
-        lv_obj_add_style(lv_label_, text->disabled, LV_PART_MAIN | LV_STATE_DISABLED);
-        lv_obj_add_style(lv_label_, text->checked, LV_PART_MAIN | LV_STATE_CHECKED);
+        auto text = button_style->get_style("text");
+        lv_obj_add_style(lv_label_, text.def, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_add_style(lv_label_, text.disabled, LV_PART_MAIN | LV_STATE_DISABLED);
+        lv_obj_add_style(lv_label_, text.checked, LV_PART_MAIN | LV_STATE_CHECKED);
     }
     if (has_icon) {
-        auto icon = button_style->get_icon();
-        lv_obj_add_style(lv_icon_, icon->def, LV_PART_MAIN | LV_STATE_DEFAULT);
-        lv_obj_add_style(lv_icon_, icon->disabled, LV_PART_MAIN | LV_STATE_DISABLED);
-        lv_obj_add_style(lv_icon_, icon->checked, LV_PART_MAIN | LV_STATE_CHECKED);
+        auto icon = button_style->get_style("icon");
+        lv_obj_add_style(lv_icon_, icon.def, LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_add_style(lv_icon_, icon.disabled, LV_PART_MAIN | LV_STATE_DISABLED);
+        lv_obj_add_style(lv_icon_, icon.checked, LV_PART_MAIN | LV_STATE_CHECKED);
     }
 }
 
@@ -217,58 +216,26 @@ void HdButton::on_released_(lv_event_t *e) {
 
 
 HdButtonStyle::HdButtonStyle() {
-    lv_style_init(&text_def_);
-    lv_style_init(&text_disabled_);
-    lv_style_init(&text_checked_);
-    text_.def = &text_def_;
-    text_.disabled = &text_disabled_;
-    text_.checked = &text_checked_;
+    StyleGroup text = {
+        (lv_style_t *)malloc(sizeof(lv_style_t)),
+        (lv_style_t *)malloc(sizeof(lv_style_t)),
+        (lv_style_t *)malloc(sizeof(lv_style_t)),
+    };
+    lv_style_init(text.def);
+    lv_style_init(text.disabled);
+    lv_style_init(text.checked);
+    styles_["text"] = text;
 
-    lv_style_init(&icon_def_);
-    lv_style_init(&icon_disabled_);
-    lv_style_init(&icon_checked_);
-    icon_.def = &icon_def_;
-    icon_.disabled = &icon_disabled_;
-    icon_.checked = &icon_checked_;
+    StyleGroup icon = {
+        (lv_style_t *)malloc(sizeof(lv_style_t)),
+        (lv_style_t *)malloc(sizeof(lv_style_t)),
+        (lv_style_t *)malloc(sizeof(lv_style_t)),
+    };
+    lv_style_init(icon.def);
+    lv_style_init(icon.disabled);
+    lv_style_init(icon.checked);
+    styles_["icon"] = icon;
 }
-StyleGroup *HdButtonStyle::get_text() {
-    return &text_;
-}
-StyleGroup *HdButtonStyle::get_icon() {
-    return &icon_;
-}
-void HdButtonStyle::set_text_border_radius(uint8_t value, lv_state_t selector) {
-    set_border_radius_(&text_, value, selector);
-}
-void HdButtonStyle::set_text_bg_color(uint32_t value, lv_state_t selector) {
-    set_bg_color_(&text_, value, selector);
-}
-void HdButtonStyle::set_text_bg_opacity(uint8_t value, lv_state_t selector) {
-    set_bg_opacity_(&text_, value, selector);
-}
-void HdButtonStyle::set_text_color(uint32_t value, lv_state_t selector) {
-    set_color_(&text_, value, selector);
-}
-void HdButtonStyle::set_text_opacity(uint8_t value, lv_state_t selector) {
-    set_opacity_(&text_, value, selector);
-}
-
-void HdButtonStyle::set_icon_border_radius(uint8_t value, lv_state_t selector) {
-    set_border_radius_(&icon_, value, selector);
-}
-void HdButtonStyle::set_icon_bg_color(uint32_t value, lv_state_t selector) {
-    set_bg_color_(&icon_, value, selector);
-}
-void HdButtonStyle::set_icon_bg_opacity(uint8_t value, lv_state_t selector) {
-    set_bg_opacity_(&icon_, value, selector);
-}
-void HdButtonStyle::set_icon_color(uint32_t value, lv_state_t selector) {
-    set_color_(&icon_, value, selector);
-}
-void HdButtonStyle::set_icon_opacity(uint8_t value, lv_state_t selector) {
-    set_opacity_(&icon_, value, selector);
-}
-
 
 }  // namespace ha_deck
 }  // namespace esphome
