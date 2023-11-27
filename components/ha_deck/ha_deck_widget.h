@@ -12,9 +12,20 @@ LV_FONT_DECLARE(Font16);
 LV_FONT_DECLARE(Font24);
 LV_FONT_DECLARE(Material24);
 LV_FONT_DECLARE(Material48);
+LV_FONT_DECLARE(Numeric42);
 
 namespace esphome {
 namespace ha_deck {
+
+enum HaDeckWidgetScale {
+    HD_SCALE_NORMAL,
+    HD_SCALE_SMALL
+};
+
+enum HaDeckWidgetPosition {
+    HD_POSITION_TOP,
+    HD_POSITION_BOTTOM
+};
 
 struct StyleGroup {
     lv_style_t *def;
@@ -42,6 +53,7 @@ protected:
     void set_opacity_(StyleGroup group, uint8_t value, lv_state_t selector);
 
     std::map<std::string, StyleGroup> styles_ = {};
+    const char *TAG = "HA_DECK";
 };
 
 class StyleManager

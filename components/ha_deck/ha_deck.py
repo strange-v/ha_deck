@@ -24,6 +24,16 @@ supported_state = {
     "DISABLED": cg.global_ns.LV_STATE_DISABLED,
 }
 
+supported_scale = {
+    "NORMAL": ha_deck_ns.HD_SCALE_NORMAL,
+    "SMALL": ha_deck_ns.HD_SCALE_SMALL,
+}
+
+supported_v_position = {
+    "TOP": ha_deck_ns.HD_POSITION_TOP,
+    "BOTTOM": ha_deck_ns.HD_POSITION_BOTTOM,
+}
+
 def get_style_state(value):
     # states = [state.strip() for state in value.split('|')]
     # state_values = [supported_state.get(s, None) for s in states]
@@ -39,6 +49,18 @@ def validate_style_state(value):
     #         raise cv.Invalid(f"Not supported value '{value}' provided")
     # return get_style_state(value)
     return cv.one_of(*supported_state, upper=True)(value)
+
+def validate_scale(value):
+    return cv.one_of(*supported_scale, upper=True)(value)
+
+def get_scale(value):
+    return supported_scale[value]
+
+def validate_v_position(value):
+    return cv.one_of(*supported_v_position, upper=True)(value)
+
+def get_v_position(value):
+    return supported_v_position[value]
 
 def validate_opacity(value):
     cv.float_range(0, 1)

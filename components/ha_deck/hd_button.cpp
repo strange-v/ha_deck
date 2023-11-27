@@ -44,31 +44,31 @@ void HdButton::add_on_long_press_callback(std::function<void()> &&callback) {
 }
 
 void HdButton::render_() {
-    lv_button_ = lv_btn_create(lv_scr_act());
+    lv_widget_ = lv_btn_create(lv_scr_act());
 
-    lv_obj_add_state(lv_button_, LV_STATE_DISABLED);
-    lv_obj_add_event_cb(lv_button_, HdButton::on_click_, LV_EVENT_SHORT_CLICKED, this);
-    lv_obj_add_event_cb(lv_button_, HdButton::on_long_press_, LV_EVENT_LONG_PRESSED, this);
-    lv_obj_add_event_cb(lv_button_, HdButton::on_released_, LV_EVENT_RELEASED, this);
+    lv_obj_add_state(lv_widget_, LV_STATE_DISABLED);
+    lv_obj_add_event_cb(lv_widget_, HdButton::on_click_, LV_EVENT_SHORT_CLICKED, this);
+    lv_obj_add_event_cb(lv_widget_, HdButton::on_long_press_, LV_EVENT_LONG_PRESSED, this);
+    lv_obj_add_event_cb(lv_widget_, HdButton::on_released_, LV_EVENT_RELEASED, this);
 
-    lv_obj_set_height(lv_button_, h_ > 0 ? h_ : 96);
-    lv_obj_set_width(lv_button_, w_ > 0 ? w_ : 110);
-    lv_obj_align(lv_button_, LV_ALIGN_TOP_LEFT, x_, y_);
-    lv_obj_add_flag(lv_button_, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
-    lv_obj_clear_flag(lv_button_, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_height(lv_widget_, h_ > 0 ? h_ : 96);
+    lv_obj_set_width(lv_widget_, w_ > 0 ? w_ : 110);
+    lv_obj_align(lv_widget_, LV_ALIGN_TOP_LEFT, x_, y_);
+    lv_obj_add_flag(lv_widget_, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
+    lv_obj_clear_flag(lv_widget_, LV_OBJ_FLAG_SCROLLABLE);
 
-    lv_obj_set_style_shadow_width(lv_button_, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_left(lv_button_, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_right(lv_button_, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_top(lv_button_, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_bottom(lv_button_, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_radius(lv_button_, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_shadow_width(lv_widget_, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_left(lv_widget_, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_right(lv_widget_, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_top(lv_widget_, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_bottom(lv_widget_, 10, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_radius(lv_widget_, 5, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     bool has_text = !text_.empty();
     bool has_icon = !icon_.empty();
 
     if (has_icon) {
-        lv_icon_ = lv_label_create(lv_button_);
+        lv_icon_ = lv_label_create(lv_widget_);
         lv_obj_set_width(lv_icon_, 48);
         lv_obj_set_height(lv_icon_, 48);
         lv_obj_set_align(lv_icon_, has_text ? LV_ALIGN_TOP_MID : LV_ALIGN_CENTER);
@@ -78,7 +78,7 @@ void HdButton::render_() {
     }
 
     if (has_text) {
-        lv_label_ = lv_label_create(lv_button_);
+        lv_label_ = lv_label_create(lv_widget_);
         lv_obj_set_width(lv_label_, LV_SIZE_CONTENT);
         lv_obj_set_height(lv_label_, LV_SIZE_CONTENT);
         lv_obj_set_align(lv_label_, has_icon ? LV_ALIGN_BOTTOM_MID : LV_ALIGN_CENTER);
@@ -89,14 +89,14 @@ void HdButton::render_() {
     set_visible(visible_);
     set_enabled(enabled_);
     if (toggle_) {
-        lv_obj_add_flag(lv_button_, LV_OBJ_FLAG_CHECKABLE);
+        lv_obj_add_flag(lv_widget_, LV_OBJ_FLAG_CHECKABLE);
         set_checked_(checked_);
     }
 }
 
 void HdButton::destroy_() {
-    lv_obj_del(lv_button_);
-    lv_button_ = nullptr;
+    lv_obj_del(lv_widget_);
+    lv_widget_ = nullptr;
 }
 
 void HdButton::update_() {
@@ -115,28 +115,28 @@ void HdButton::update_() {
 }
 
 void HdButton::set_visible_(bool visible) {
-    if (!lv_button_)
+    if (!lv_widget_)
         return;
     
     if (visible) {
-        lv_obj_clear_flag(lv_button_, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_clear_flag(lv_widget_, LV_OBJ_FLAG_HIDDEN);
     } else {
-        lv_obj_add_flag(lv_button_, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(lv_widget_, LV_OBJ_FLAG_HIDDEN);
     }
 }
 
 void HdButton::set_enabled_(bool enabled) {
-    if (!lv_button_)
+    if (!lv_widget_)
         return;
     
     if (enabled) {
-        lv_obj_clear_state(lv_button_, LV_STATE_DISABLED);
+        lv_obj_clear_state(lv_widget_, LV_STATE_DISABLED);
         if (lv_label_)
             lv_obj_clear_state(lv_label_, LV_STATE_DISABLED);
         if (lv_icon_)
             lv_obj_clear_state(lv_icon_, LV_STATE_DISABLED);
     } else {
-        lv_obj_add_state(lv_button_, LV_STATE_DISABLED);
+        lv_obj_add_state(lv_widget_, LV_STATE_DISABLED);
         if (lv_label_)
             lv_obj_add_state(lv_label_, LV_STATE_DISABLED);
         if (lv_icon_)
@@ -151,9 +151,9 @@ void HdButton::apply_style_(HaDeckWidgetStyle *style)
         return;
 
     auto main = button_style->get_style("main");
-    lv_obj_add_style(lv_button_, main.def, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_add_style(lv_button_, main.disabled, LV_PART_MAIN | LV_STATE_DISABLED);
-    lv_obj_add_style(lv_button_, main.checked, LV_PART_MAIN | LV_STATE_CHECKED);
+    lv_obj_add_style(lv_widget_, main.def, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_add_style(lv_widget_, main.disabled, LV_PART_MAIN | LV_STATE_DISABLED);
+    lv_obj_add_style(lv_widget_, main.checked, LV_PART_MAIN | LV_STATE_CHECKED);
 
     bool has_text = !text_.empty();
     bool has_icon = !icon_.empty();
@@ -175,13 +175,13 @@ void HdButton::apply_style_(HaDeckWidgetStyle *style)
 void HdButton::set_checked_(bool checked) {
     checked_ = checked;
     
-    if (!lv_button_)
+    if (!lv_widget_)
         return;
     
     if (checked) {
-        lv_obj_add_state(lv_button_, LV_STATE_CHECKED);
+        lv_obj_add_state(lv_widget_, LV_STATE_CHECKED);
     } else {
-        lv_obj_clear_state(lv_button_, LV_STATE_CHECKED);
+        lv_obj_clear_state(lv_widget_, LV_STATE_CHECKED);
     }
 }
 
@@ -192,7 +192,7 @@ void HdButton::on_click_(lv_event_t *e) {
     if (!obj->toggle_)
         return;
 
-    auto checked = lv_obj_has_state(obj->lv_button_, LV_STATE_CHECKED);
+    auto checked = lv_obj_has_state(obj->lv_widget_, LV_STATE_CHECKED);
     if (obj->checked_) {
         obj->turn_off_callback_.call();
     } else {

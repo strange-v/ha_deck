@@ -39,7 +39,7 @@ private:
     bool long_pressed_ = false;
     std::string text_;
     std::string icon_;
-    lv_obj_t *lv_button_;
+    lv_obj_t *lv_widget_;
     lv_obj_t *lv_icon_;
     lv_obj_t *lv_label_;
 

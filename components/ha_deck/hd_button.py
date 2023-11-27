@@ -91,40 +91,6 @@ BUTTON_CONFIG_SCHEMA = cv.Schema(
     }
 )
 
-# async def text_styles_to_code(style, config):
-#     for item in config:
-#         state = supported_state["DEFAULT"]
-#         if CONF_STATE in item:
-#             state = supported_state[item[CONF_STATE]]
-        
-#         if CONF_BORDER_RADIUS in item:
-#             cg.add(style.set_text_border_radius(item[CONF_BORDER_RADIUS], state))
-#         if CONF_BG_COLOR in item:
-#             cg.add(style.set_text_bg_color(item[CONF_BG_COLOR], state))
-#         if CONF_BG_OPACITY in item:
-#             cg.add(style.set_text_bg_opacity(item[CONF_BG_OPACITY]), state)
-#         if CONF_COLOR in item:
-#             cg.add(style.set_text_color(item[CONF_COLOR], state))
-#         if CONF_OPACITY in item:
-#             cg.add(style.set_text_opacity(item[CONF_OPACITY]), state)
-
-# async def icon_styles_to_code(style, config):
-#     for item in config:
-#         state = supported_state["DEFAULT"]
-#         if CONF_STATE in item:
-#             state = supported_state[item[CONF_STATE]]
-        
-#         if CONF_BORDER_RADIUS in item:
-#             cg.add(style.set_icon_border_radius(item[CONF_BORDER_RADIUS], state))
-#         if CONF_BG_COLOR in item:
-#             cg.add(style.set_icon_bg_color(item[CONF_BG_COLOR], state))
-#         if CONF_BG_OPACITY in item:
-#             cg.add(style.set_icon_bg_opacity(item[CONF_BG_OPACITY]), state)
-#         if CONF_COLOR in item:
-#             cg.add(style.set_icon_color(item[CONF_COLOR], state))
-#         if CONF_OPACITY in item:
-#             cg.add(style.set_icon_opacity(item[CONF_OPACITY]), state)
-
 async def build_button_style(obj, config):
     if CONF_TEXT in config:
         await common_styles_to_code(obj, config[CONF_TEXT], CONF_TEXT)

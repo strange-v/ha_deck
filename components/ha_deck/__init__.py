@@ -20,7 +20,7 @@ from esphome.core import CORE, coroutine_with_priority
 from .ha_deck import ha_deck_ns, HaDeck, HaDeckScreen, COMMON_STYLE_PROPERTIES_SCHEMA, common_styles_to_code
 from .hd_button import BUTTON_CONFIG_SCHEMA, BUTTON_STYLE_SCHEMA, build_button, build_button_style
 from .hd_slider import SLIDER_CONFIG_SCHEMA, SLIDER_STYLE_SCHEMA, build_slider, build_slider_style
-from .hd_value_card import VALUE_CARD_CONFIG_SCHEMA, build_value_card
+from .hd_sensor import SENSOR_CONFIG_SCHEMA, SENSOR_STYLE_SCHEMA, build_sensor, build_sensor_style
 
 CODEOWNERS = ["@strange-v"]
 
@@ -40,6 +40,7 @@ CONF_ON_INACTIVITY_CHANGE = "on_inactivity_change"
 
 CONF_BUTTON = "button"
 CONF_SLIDER = "slider"
+CONF_SENSOR = "sensor"
 CONF_VALUE_CARD = "value-card"
 
 InactivityChangeTrigger = ha_deck_ns.class_(
@@ -66,13 +67,13 @@ def validate_style(name):
 WIDGET_BUILDERS = {
     CONF_BUTTON: build_button,
     CONF_SLIDER: build_slider,
-    CONF_VALUE_CARD: build_value_card,
+    CONF_SENSOR: build_sensor,
 }
 
 WIDGET_STYLE_BUILDERS = {
     CONF_BUTTON: build_button_style,
     CONF_SLIDER: build_slider_style,
-    # CONF_VALUE_CARD: build_value_card,
+    CONF_SENSOR: build_sensor_style,
 }
 
 
@@ -87,7 +88,7 @@ COMMON_WIDGET_STYLE_SCHEMA = cv.Schema(
 STYLE_SCHEMA = cv.typed_schema({
     CONF_BUTTON: COMMON_WIDGET_STYLE_SCHEMA.extend(BUTTON_STYLE_SCHEMA),
     CONF_SLIDER: COMMON_WIDGET_STYLE_SCHEMA.extend(SLIDER_STYLE_SCHEMA),
-    # CONF_VALUE_CARD: COMMON_WIDGET_STYLE_SCHEMA.extend(VALUE_CARD_STYLE_SCHEMA),
+    CONF_SENSOR: COMMON_WIDGET_STYLE_SCHEMA.extend(SENSOR_STYLE_SCHEMA),
 })
 
 COMMON_WIDGET_SCHEMA = cv.Schema(
@@ -102,7 +103,7 @@ COMMON_WIDGET_SCHEMA = cv.Schema(
 WIDGET_SCHEMA = cv.typed_schema({
     CONF_BUTTON: COMMON_WIDGET_SCHEMA.extend(BUTTON_CONFIG_SCHEMA),
     CONF_SLIDER: COMMON_WIDGET_SCHEMA.extend(SLIDER_CONFIG_SCHEMA),
-    CONF_VALUE_CARD: COMMON_WIDGET_SCHEMA.extend(VALUE_CARD_CONFIG_SCHEMA),
+    CONF_SENSOR: COMMON_WIDGET_SCHEMA.extend(SENSOR_CONFIG_SCHEMA),
 })
 SCREEN_SCHEMA = cv.Schema(
     {
