@@ -1,4 +1,4 @@
-# Home Assistant Deck
+# Home Assistant Deck, made by strange-v
 
 Config-driven Home Assistant dashboard (built on top of ESPHome using LVGL).
 
