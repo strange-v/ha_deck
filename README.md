@@ -1,4 +1,4 @@
-# Home Assistant Deck
+# Home Assistant Deck, made by strange-v
 
 Config-driven Home Assistant dashboard (built on top of ESPHome using LVGL).
 
@@ -21,6 +21,14 @@ The ha_deck component renders all widgets, switches screens, and controls inacti
 - WT32S3-86S/ZX3D95CE01S-AR-4848 (ESP32-S3, 4", 480x480) - **not fully tested**
   *As of today, only the hardware component has been added. HA Deck doesn't auto-scale widget size based on screen resolution, so sliders will look odd when the default parameters are used with a larger (480x480) display.*
 
+**Added by ToViNi (Se example yaml code for board config):**
+
+- Sunton ESP32-3248S035C (ESP32, 3.5", 480x320) - **Only 4MB flash!**
+- Sunton Esp32-8048S043C (ESP3-S3, 4.3", 800x480) - **no background image provided**
+- Sunton Esp32-8048S050C (ESP3-S3, 5.0", 800x480) - **no background image provided**
+- Sunton Esp32-8048S070C (ESP3-S3, 7.0", 800x480) - **no background image provided**
+- WT32-SC01 (ESP32, 3.5", 480x320) - **Only 4MB flash!**
+
 ## How to use
 
 First, import components using the external [components feature](https://esphome.io/components/external_components.html).
@@ -29,7 +37,7 @@ First, import components using the external [components feature](https://esphome
 external_components:
   - source:
       type: git
-      url: https://github.com/strange-v/ha_deck
+      url: https://github.com/tovini/ha_deck
       ref: main
     components: [ hd_device_sc01_plus, ha_deck ]
 ```
