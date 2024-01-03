@@ -21,6 +21,11 @@ The ha_deck component renders all widgets, switches screens, and controls inacti
 - WT32S3-86S/ZX3D95CE01S-AR-4848 (ESP32-S3, 4", 480x480) - **not fully tested**
   *As of today, only the hardware component has been added. HA Deck doesn't auto-scale widget size based on screen resolution, so sliders will look odd when the default parameters are used with a larger (480x480) display.*
 
+## How to add support for your screen
+As I'm currently focusing on developing the new version of HA Deck that comes with additional widgets, styles, and other features, I won't be able to provide support for new boards. Once the initial release is ready, I need to figure out the best way to do it, as there are numerous screens to consider, and it won't be feasible for me to test and maintain them all.
+
+For now, creating a new hardware component in a separate repository is the recommended way for easy integration with HA Deck.
+
 ## How to use
 
 First, import components using the external [components feature](https://esphome.io/components/external_components.html).
