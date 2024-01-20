@@ -52,8 +52,6 @@ void HaDeckDevice::setup() {
     lv_theme_default_init(NULL, lv_color_hex(0xFFEB3B), lv_color_hex(0xFF7043), 1, LV_FONT_DEFAULT);
 
     lcd.init();
-    lcd.begin();
-    lcd.getLcd()->displayOn();
 //    lcd.getBacklight()->on();
 //    lcd.getBacklight()->setBrightness(80);
 
@@ -76,6 +74,8 @@ void HaDeckDevice::setup() {
     indev_drv.long_press_repeat_time = 300;
     indev_drv.read_cb = touchpad_read;
     lv_indev_drv_register(&indev_drv);
+
+    lcd.begin();
 
     group = lv_group_create();
     lv_group_set_default(group);
