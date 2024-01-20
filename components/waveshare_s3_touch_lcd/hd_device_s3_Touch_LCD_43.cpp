@@ -15,6 +15,8 @@ lv_group_t *group;
 
 void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 {
+    ESP_LOGCONFIG(TAG, "flush_pixels()");
+
     //uint32_t w = (area->x2 - area->x1 + 1);
     //uint32_t h = (area->y2 - area->y1 + 1);
     //uint32_t len = w * h;
@@ -32,6 +34,8 @@ void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color
 
 void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 {
+    ESP_LOGCONFIG(TAG, "touchpad_read");
+
     auto* touch = lcd.getLcdTouch();
 
     if (touch->getTouchState()) {
@@ -45,6 +49,7 @@ void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data
 }
 
 void HaDeckDevice::setup() {
+    ESP_LOGCONFIG(TAG, "HaDeckDevice::Setup()");
     lv_init();
     lv_theme_default_init(NULL, lv_color_hex(0xFFEB3B), lv_color_hex(0xFF7043), 1, LV_FONT_DEFAULT);
 
@@ -77,6 +82,7 @@ void HaDeckDevice::setup() {
     group = lv_group_create();
     lv_group_set_default(group);
 
+    ESP_LOGCONFIG(TAG, "Setting background image");
     auto bg_image = lv_img_create(lv_scr_act());
     lv_img_set_src(bg_image, &bg_480x320);
     lv_obj_set_parent(bg_image, lv_scr_act());
