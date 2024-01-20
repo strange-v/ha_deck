@@ -9,7 +9,6 @@ esphome:
   friendly_name: ha-deck1
   # In this way, custom partitions can be configured and flushed (not over OTA!)
   platformio_options:
-    board_upload.flash_size: 16MB
     board_upload.maximum_ram_size: 327680
     board_upload.maximum_size: 16777216
     board_build.partitions: "../../../custom_partitions_3584.csv"
@@ -19,6 +18,7 @@ esp32:
   board: esp32-s3-devkitc-1
   framework:
     type: arduino
+  flash_size: 16MB
 
 # Enable logging
 logger:
