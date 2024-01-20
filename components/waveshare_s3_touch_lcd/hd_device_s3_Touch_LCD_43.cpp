@@ -34,8 +34,6 @@ void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color
 
 void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 {
-    ESP_LOGCONFIG(TAG, "touchpad_read");
-
     auto* touch = lcd.getLcdTouch();
 
     if (touch->getTouchState()) {
