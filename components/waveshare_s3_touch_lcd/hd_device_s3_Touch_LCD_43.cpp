@@ -12,6 +12,7 @@ ESP_Panel lcd;
 
 lv_disp_t *indev_disp;
 lv_group_t *group;
+unsigned long flush_time = 0;
 
 void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 {
@@ -19,8 +20,13 @@ void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color
     //uint32_t h = (area->y2 - area->y1 + 1);
     //uint32_t len = w * h;
 
+    auto now = millis();
     auto* display = lcd.getLcd();
     display->drawBitmap(area->x1, area->y1, area->x2, area->y2, static_cast<void*>(color_p));
+    if (flush_time - now > 1000) {
+      flush_time = now;
+      ESP_LOGCONFIG(TAG, "flush_pixels: %i, %i, %i, %i", area->x1, area->y1, area->x2, area->y2);
+    }
     
     // lcd.startWrite();                            /* Start new TFT transaction */
     // lcd.setAddrWindow(area->x1, area->y1, w, h); /* set the working window */
@@ -74,8 +80,6 @@ void HaDeckDevice::setup() {
     lv_indev_drv_register(&indev_drv);
 
     lcd.begin();
-    lcd.getLcd()->mirror(true, false);
-    lcd.getLcdTouch()->mirrorX(true);
 
     group = lv_group_create();
     lv_group_set_default(group);
