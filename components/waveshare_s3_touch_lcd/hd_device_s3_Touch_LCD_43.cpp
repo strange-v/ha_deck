@@ -101,7 +101,10 @@ uint8_t HaDeckDevice::get_brightness() {
 
 void HaDeckDevice::set_brightness(uint8_t value) {
     brightness_ = value;
-    lcd.getBacklight()->setBrightness(brightness_);
+    auto* backlight = lcd.getBacklight();
+    if (backlight) {
+      backlight->setBrightness(brightness_);
+    }
 }
 
 }  // namespace hd_device
