@@ -20,13 +20,9 @@ void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color
     //uint32_t h = (area->y2 - area->y1 + 1);
     //uint32_t len = w * h;
 
-    auto now = millis();
     auto* display = lcd.getLcd();
     display->drawBitmap(area->x1, area->y1, area->x2, area->y2, static_cast<void*>(color_p));
-    if (flush_time - now > 1000) {
-      flush_time = now;
-      ESP_LOGCONFIG(TAG, "flush_pixels: %i, %i, %i, %i", area->x1, area->y1, area->x2, area->y2);
-    }
+    ESP_LOGCONFIG(TAG, "flush_pixels: %i, %i, %i, %i", area->x1, area->y1, area->x2, area->y2);
     
     // lcd.startWrite();                            /* Start new TFT transaction */
     // lcd.setAddrWindow(area->x1, area->y1, w, h); /* set the working window */
@@ -87,6 +83,7 @@ void HaDeckDevice::setup() {
     auto bg_image = lv_img_create(lv_scr_act());
     lv_img_set_src(bg_image, &bg_480x320);
     lv_obj_set_parent(bg_image, lv_scr_act());
+    lv_obj_center(bg_image);
 }
 
 void HaDeckDevice::loop() {
