@@ -51,8 +51,8 @@
 #define ESP_PANEL_LCD_NAME          ST7262
 
 /* LCD resolution in pixels */
-#define ESP_PANEL_LCD_H_RES         (480)
-#define ESP_PANEL_LCD_V_RES         (800)
+#define ESP_PANEL_LCD_H_RES         (800)
+#define ESP_PANEL_LCD_V_RES         (480)
 
 /* LCD Bus Settings */
 /**

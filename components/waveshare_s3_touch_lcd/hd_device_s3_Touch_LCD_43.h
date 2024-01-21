@@ -8,8 +8,8 @@
 
 LV_IMG_DECLARE(bg_480x320);
 
-#define TFT_WIDTH 480
-#define TFT_HEIGHT 800
+#define TFT_WIDTH ESP_PANEL_LCD_H_RES
+#define TFT_HEIGHT ESP_PANEL_LCD_V_RES
 
 
 namespace esphome {
