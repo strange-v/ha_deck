@@ -3,14 +3,13 @@
 #include "esphome/core/component.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
-#include ESP_PANEL_CONF_PATH
 #include "ESP_Panel.h"
 #include "lvgl.h"
 
 LV_IMG_DECLARE(bg_480x320);
 
-#define TFT_WIDTH ESP_PANEL_LCD_H_RES
-#define TFT_HEIGHT ESP_PANEL_LCD_V_RES
+#define TFT_WIDTH (800)
+#define TFT_HEIGHT (480)
 
 namespace esphome {
 namespace hd_device {
