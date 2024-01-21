@@ -52,7 +52,7 @@ void HaDeckDevice::setup() {
     ESP_LOGCONFIG(TAG, "HaDeckDevice::Setup()");
 
     lv_init();
-    //lv_theme_default_init(NULL, lv_color_hex(0xFFEB3B), lv_color_hex(0xFF7043), 1, LV_FONT_DEFAULT);
+    lv_theme_default_init(NULL, lv_color_hex(0xFFEB3B), lv_color_hex(0xFF7043), 1, LV_FONT_DEFAULT);
 
     uint8_t* buf = (uint8_t *)heap_caps_calloc(1, LVGL_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_INTERNAL);
 
