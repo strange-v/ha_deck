@@ -94,10 +94,10 @@ void HaDeckDevice::setup() {
     expander->digitalWrite(USB_SEL, LOW);
 
     /* Add into panel */
-    panel->addIOExpander(expander);
+    panel.addIOExpander(expander);
 
     /* Start panel */
-    panel->begin();
+    panel.begin();
 
     group = lv_group_create();
     lv_group_set_default(group);
