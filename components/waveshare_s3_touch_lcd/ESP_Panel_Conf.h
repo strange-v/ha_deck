@@ -51,7 +51,7 @@
 #define ESP_PANEL_LCD_NAME          ST7262
 
 /* LCD resolution in pixels */
-#define ESP_PANEL_LCD_H_RES         (720)
+#define ESP_PANEL_LCD_H_RES         (800)
 #define ESP_PANEL_LCD_V_RES         (480)
 
 /* LCD Bus Settings */
@@ -93,9 +93,9 @@
     #define ESP_PANEL_LCD_RGB_CLK_HZ            (14 * 1000 * 1000)
     #define ESP_PANEL_LCD_RGB_HPW               (10)
     #define ESP_PANEL_LCD_RGB_HBP               (10)
-    #define ESP_PANEL_LCD_RGB_HFP               (20)
+    #define ESP_PANEL_LCD_RGB_HFP               (8)
     #define ESP_PANEL_LCD_RGB_VPW               (10)
-    #define ESP_PANEL_LCD_RGB_VBP               (10)
+    #define ESP_PANEL_LCD_RGB_VBP               (8)
     #define ESP_PANEL_LCD_RGB_VFP               (10)
     #define ESP_PANEL_LCD_RGB_PCLK_ACTIVE_NEG   (0)
     #define ESP_PANEL_LCD_RGB_DATA_WIDTH        (16)
