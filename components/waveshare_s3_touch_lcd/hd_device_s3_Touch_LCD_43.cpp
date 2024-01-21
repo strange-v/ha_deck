@@ -1,6 +1,7 @@
 #include "hd_device_s3_Touch_LCD_43.h"
 #include "arduino.h"
 #include "ESP_IOExpander_Library.h"
+#include "demos/lv_demos.h"
 
 namespace esphome {
 namespace hd_device {
@@ -102,6 +103,8 @@ void HaDeckDevice::setup() {
     group = lv_group_create();
     lv_group_set_default(group);
 
+    lv_demo_widgets();
+    
 /*
     auto bg_image = lv_img_create(lv_scr_act());
     lv_img_set_src(bg_image, &bg_480x320);
