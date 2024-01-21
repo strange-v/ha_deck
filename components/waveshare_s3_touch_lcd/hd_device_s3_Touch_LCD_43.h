@@ -3,6 +3,7 @@
 #include "esphome/core/component.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/log.h"
+#include "ESP_PANEL_CONF_PATH"
 #include "ESP_Panel.h"
 #include "lvgl.h"
 
