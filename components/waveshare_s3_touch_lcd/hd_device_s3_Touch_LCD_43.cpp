@@ -4,12 +4,23 @@
 namespace esphome {
 namespace hd_device {
 
+// Extend IO Pin define
+#define TP_RST 1
+#define LCD_BL 2
+#define LCD_RST 3
+#define SD_CS 4
+#define USB_SEL 5
+
+// I2C Pin define
+#define I2C_MASTER_NUM 0
+#define I2C_MASTER_SDA_IO 8
+#define I2C_MASTER_SCL_IO 9
+
 static const char *const TAG = "HD_DEVICE";
 static lv_disp_draw_buf_t draw_buf;
-static lv_color_t *buf1 = (lv_color_t *)heap_caps_malloc(TFT_WIDTH * 10 * sizeof(lv_color_t), MALLOC_CAP_DMA);
-static lv_color_t *buf2 = (lv_color_t *)heap_caps_malloc(TFT_WIDTH * 10 * sizeof(lv_color_t), MALLOC_CAP_DMA);
+static lv_color_t *buf = (lv_color_t *)heap_caps_malloc(TFT_WIDTH * 20 * sizeof(lv_color_t), MALLOC_CAP_DMA);
 
-ESP_Panel lcd;
+ESP_Panel panel;
 
 lv_disp_t *indev_disp;
 lv_group_t *group;
@@ -21,8 +32,8 @@ void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color
     //uint32_t h = (area->y2 - area->y1 + 1);
     //uint32_t len = w * h;
 
-    auto* display = lcd.getLcd();
-    display->drawBitmap(area->x1, area->y1, area->x2, area->y2, static_cast<void*>(color_p));
+    auto* display = panel.getLcd();
+    display->drawBitmap(area->x1, area->y1, area->x2, area->y2, color_p);
     
     // lcd.startWrite();                            /* Start new TFT transaction */
     // lcd.setAddrWindow(area->x1, area->y1, w, h); /* set the working window */
@@ -34,7 +45,7 @@ void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color
 
 void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 {
-    auto* touch = lcd.getLcdTouch();
+    auto* touch = panel.getLcdTouch();
 
     touch->readData();
     if (touch->getTouchState()) {
@@ -52,11 +63,7 @@ void HaDeckDevice::setup() {
     lv_init();
     lv_theme_default_init(NULL, lv_color_hex(0xFFEB3B), lv_color_hex(0xFF7043), 1, LV_FONT_DEFAULT);
 
-    lcd.init();
-//    lcd.getBacklight()->on();
-//    lcd.getBacklight()->setBrightness(80);
-
-    lv_disp_draw_buf_init(&draw_buf, buf1, buf2, TFT_WIDTH * 10);
+    lv_disp_draw_buf_init(&draw_buf, buf, nullptr, TFT_WIDTH * 20);
 
     static lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
@@ -76,7 +83,20 @@ void HaDeckDevice::setup() {
     indev_drv.read_cb = touchpad_read;
     lv_indev_drv_register(&indev_drv);
 
-    lcd.begin();
+    panel.init();
+
+    ESP_IOExpander* expander = new ESP_IOExpander_CH422G(I2C_MASTER_NUM, ESP_IO_EXPANDER_I2C_CH422G_ADDRESS_000);
+    expander->init();
+    expander->begin();
+    expander->multiPinMode(TP_RST | LCD_BL | LCD_RST | SD_CS | USB_SEL, OUTPUT);
+    expander->multiDigitalWrite(TP_RST | LCD_BL | LCD_RST | SD_CS, HIGH);
+    expander->digitalWrite(USB_SEL, LOW);
+
+    /* Add into panel */
+    panel->addIOExpander(expander);
+
+    /* Start panel */
+    panel->begin();
 
     group = lv_group_create();
     lv_group_set_default(group);
