@@ -23,7 +23,6 @@ void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color
 
     auto* display = lcd.getLcd();
     display->drawBitmap(area->x1, area->y1, area->x2, area->y2, static_cast<void*>(color_p));
-    ESP_LOGCONFIG(TAG, "flush_pixels: %i, %i, %i, %i", area->x1, area->y1, area->x2, area->y2);
     
     // lcd.startWrite();                            /* Start new TFT transaction */
     // lcd.setAddrWindow(area->x1, area->y1, w, h); /* set the working window */
@@ -43,7 +42,6 @@ void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data
         data->point.x = point.x;
         data->point.y = point.y;
         data->state = LV_INDEV_STATE_PR;
-        ESP_LOGCONFIG(TAG, "touch_point: %i, %i", point.x, point.y);
     } else {
         data->state = LV_INDEV_STATE_REL;
     }
