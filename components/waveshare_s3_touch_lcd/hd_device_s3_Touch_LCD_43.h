@@ -8,8 +8,8 @@
 
 LV_IMG_DECLARE(bg_480x320);
 
-#define TFT_WIDTH 800
-#define TFT_HEIGHT 480
+#define TFT_WIDTH 480
+#define TFT_HEIGHT 800
 
 
 namespace esphome {
