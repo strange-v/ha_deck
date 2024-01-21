@@ -1,5 +1,6 @@
 #include "hd_device_s3_Touch_LCD_43.h"
 #include "arduino.h"
+#include "ESP_IOExpander_Library.h"
 
 namespace esphome {
 namespace hd_device {
