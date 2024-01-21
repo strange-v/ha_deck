@@ -1,7 +1,6 @@
 #include "hd_device_s3_Touch_LCD_43.h"
 #include "arduino.h"
 #include "ESP_IOExpander_Library.h"
-#include "demos/lv_demos.h"
 
 namespace esphome {
 namespace hd_device {
@@ -18,9 +17,11 @@ namespace hd_device {
 #define I2C_MASTER_SDA_IO 8
 #define I2C_MASTER_SCL_IO 9
 
+#define LVGL_BUF_SIZE           (ESP_PANEL_LCD_H_RES * 20)
+
 static const char *const TAG = "HD_DEVICE";
 static lv_disp_draw_buf_t draw_buf;
-static lv_color_t *buf = (lv_color_t *)heap_caps_malloc(TFT_WIDTH * 20 * sizeof(lv_color_t), MALLOC_CAP_DMA);
+//static lv_color_t *buf = (lv_color_t *)heap_caps_malloc(LVGL_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_DMA);
 
 ESP_Panel panel;
 
@@ -65,6 +66,8 @@ void HaDeckDevice::setup() {
     lv_init();
     lv_theme_default_init(NULL, lv_color_hex(0xFFEB3B), lv_color_hex(0xFF7043), 1, LV_FONT_DEFAULT);
 
+    uint8_t* buf = (uint8_t *)heap_caps_calloc(1, LVGL_BUF_SIZE * sizeof(lv_color_t), MALLOC_CAP_INTERNAL);
+
     lv_disp_draw_buf_init(&draw_buf, buf, nullptr, TFT_WIDTH * 20);
 
     static lv_disp_drv_t disp_drv;
@@ -103,14 +106,11 @@ void HaDeckDevice::setup() {
     group = lv_group_create();
     lv_group_set_default(group);
 
-    lv_demo_widgets();
-    
-/*
     auto bg_image = lv_img_create(lv_scr_act());
     lv_img_set_src(bg_image, &bg_480x320);
     lv_obj_set_parent(bg_image, lv_scr_act());
     lv_obj_center(bg_image);
-*/
+
 }
 
 void HaDeckDevice::loop() {
