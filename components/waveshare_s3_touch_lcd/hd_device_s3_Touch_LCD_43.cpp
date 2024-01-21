@@ -6,7 +6,8 @@ namespace hd_device {
 
 static const char *const TAG = "HD_DEVICE";
 static lv_disp_draw_buf_t draw_buf;
-static lv_color_t *buf = (lv_color_t *)heap_caps_malloc(TFT_WIDTH * 20 * sizeof(lv_color_t), MALLOC_CAP_DMA);
+static lv_color_t *buf1 = (lv_color_t *)heap_caps_malloc(TFT_WIDTH * 10 * sizeof(lv_color_t), MALLOC_CAP_DMA);
+static lv_color_t *buf2 = (lv_color_t *)heap_caps_malloc(TFT_WIDTH * 10 * sizeof(lv_color_t), MALLOC_CAP_DMA);
 
 ESP_Panel lcd;
 
@@ -56,7 +57,7 @@ void HaDeckDevice::setup() {
 //    lcd.getBacklight()->on();
 //    lcd.getBacklight()->setBrightness(80);
 
-    lv_disp_draw_buf_init(&draw_buf, buf, NULL, TFT_WIDTH * 20);
+    lv_disp_draw_buf_init(&draw_buf, buf1, buf2, TFT_WIDTH * 10);
 
     static lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv);
