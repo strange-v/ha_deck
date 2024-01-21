@@ -102,10 +102,12 @@ void HaDeckDevice::setup() {
     group = lv_group_create();
     lv_group_set_default(group);
 
+/*
     auto bg_image = lv_img_create(lv_scr_act());
     lv_img_set_src(bg_image, &bg_480x320);
     lv_obj_set_parent(bg_image, lv_scr_act());
     lv_obj_center(bg_image);
+*/
 }
 
 void HaDeckDevice::loop() {
