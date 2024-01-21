@@ -37,10 +37,11 @@ void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data
     auto* touch = lcd.getLcdTouch();
 
     if (touch->getTouchState()) {
-        TouchPoint point = touch->getPoint(0);
+        TouchPoint point = touch->getPoint();
         data->point.x = point.x;
         data->point.y = point.y;
         data->state = LV_INDEV_STATE_PR;
+        ESP_LOGCONFIG(TAG, "touch_point: %i, %i", point.x, point.y);
     } else {
         data->state = LV_INDEV_STATE_REL;
     }
