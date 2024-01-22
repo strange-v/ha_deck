@@ -6,7 +6,7 @@
 #include "ESP_Panel_Library.h"
 #include "lvgl.h"
 
-LV_IMG_DECLARE(bg_480x320);
+LV_IMG_DECLARE(bg_800x480);
 
 #define TFT_WIDTH ESP_PANEL_LCD_H_RES
 #define TFT_HEIGHT ESP_PANEL_LCD_V_RES
