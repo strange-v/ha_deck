@@ -56,41 +56,6 @@ void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data
     }
 }
 
-/*
-SemaphoreHandle_t lvgl_mux = NULL;                  // LVGL mutex
-
-void lvgl_port_lock(int timeout_ms)
-{
-    const TickType_t timeout_ticks = (timeout_ms < 0) ? portMAX_DELAY : pdMS_TO_TICKS(timeout_ms);
-    xSemaphoreTakeRecursive(lvgl_mux, timeout_ticks);
-}
-
-void lvgl_port_unlock(void)
-{
-    xSemaphoreGiveRecursive(lvgl_mux);
-}
-
-void lvgl_port_task(void *arg)
-{
-    Serial.println("Starting LVGL task");
-
-    uint32_t task_delay_ms = LVGL_TASK_MAX_DELAY_MS;
-    while (1) {
-        // Lock the mutex due to the LVGL APIs are not thread-safe
-        lvgl_port_lock(-1);
-        task_delay_ms = lv_timer_handler();
-        // Release the mutex
-        lvgl_port_unlock();
-        if (task_delay_ms > LVGL_TASK_MAX_DELAY_MS) {
-            task_delay_ms = LVGL_TASK_MAX_DELAY_MS;
-        } else if (task_delay_ms < LVGL_TASK_MIN_DELAY_MS) {
-            task_delay_ms = LVGL_TASK_MIN_DELAY_MS;
-        }
-        vTaskDelay(pdMS_TO_TICKS(task_delay_ms));
-    }
-}
-*/
-
 void lvglDeck::setup() {
     lv_init();
     lv_theme_default_init(NULL, lv_color_hex(0xFFEB3B), lv_color_hex(0xFF7043), 1, LV_FONT_DEFAULT);
@@ -130,22 +95,12 @@ void lvglDeck::setup() {
     /* Start panel */
     panel.begin();
 
-    /* Create a task to run the LVGL task periodically */
-    //lvgl_mux = xSemaphoreCreateRecursiveMutex();
-    //xTaskCreate(lvgl_port_task, "lvgl", LVGL_TASK_STACK_SIZE, NULL, LVGL_TASK_PRIORITY, NULL);
-
-    /* Lock the mutex due to the LVGL APIs are not thread-safe */
-    //lvgl_port_lock(-1);
-
     group = lv_group_create();
     lv_group_set_default(group);
 
     auto bg_image = lv_img_create(lv_scr_act());
     lv_img_set_src(bg_image, &bg_800x480);
     lv_obj_set_parent(bg_image, lv_scr_act());
-
-    /* Release the mutex */
-    //lvgl_port_unlock();
 }
 
 void lvglDeck::loop() {
