@@ -56,6 +56,7 @@ void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data
     }
 }
 
+/*
 SemaphoreHandle_t lvgl_mux = NULL;                  // LVGL mutex
 
 void lvgl_port_lock(int timeout_ms)
@@ -88,6 +89,7 @@ void lvgl_port_task(void *arg)
         vTaskDelay(pdMS_TO_TICKS(task_delay_ms));
     }
 }
+*/
 
 void lvglDeck::setup() {
     lv_init();
@@ -129,11 +131,11 @@ void lvglDeck::setup() {
     panel.begin();
 
     /* Create a task to run the LVGL task periodically */
-    lvgl_mux = xSemaphoreCreateRecursiveMutex();
-    xTaskCreate(lvgl_port_task, "lvgl", LVGL_TASK_STACK_SIZE, NULL, LVGL_TASK_PRIORITY, NULL);
+    //lvgl_mux = xSemaphoreCreateRecursiveMutex();
+    //xTaskCreate(lvgl_port_task, "lvgl", LVGL_TASK_STACK_SIZE, NULL, LVGL_TASK_PRIORITY, NULL);
 
     /* Lock the mutex due to the LVGL APIs are not thread-safe */
-    lvgl_port_lock(-1);
+    //lvgl_port_lock(-1);
 
     group = lv_group_create();
     lv_group_set_default(group);
@@ -144,11 +146,11 @@ void lvglDeck::setup() {
     lv_obj_center(bg_image);
 
     /* Release the mutex */
-    lvgl_port_unlock();
+    //lvgl_port_unlock();
 }
 
 void lvglDeck::loop() {
-    //lv_timer_handler();
+    lv_timer_handler();
 
     unsigned long ms = esphome::millis();
     if (ms - time_ > 60000) {
