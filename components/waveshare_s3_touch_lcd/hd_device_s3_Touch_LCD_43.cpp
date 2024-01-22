@@ -38,7 +38,7 @@ unsigned long flush_time = 0;
 
 void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 {
-    panel.getLcd()->drawBitmap(area->x1, area->y1, area->x2, area->y2, color_p);
+    panel.getLcd()->drawBitmap(area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_p);
     lv_disp_flush_ready(disp);
 }
 
