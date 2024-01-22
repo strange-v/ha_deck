@@ -2,6 +2,7 @@
 #include "arduino.h"
 #include "ESP_IOExpander_Library.h"
 
+
 namespace esphome {
 namespace hd_device {
 
@@ -87,9 +88,7 @@ void lvgl_port_task(void *arg)
     }
 }
 
-void HaDeckDevice::setup() {
-    ESP_LOGCONFIG(TAG, "HaDeckDevice::Setup()");
-
+void lvglDeck::setup() {
     lv_init();
     lv_theme_default_init(NULL, lv_color_hex(0xFFEB3B), lv_color_hex(0xFF7043), 1, LV_FONT_DEFAULT);
 
@@ -147,7 +146,7 @@ void HaDeckDevice::setup() {
     lvgl_port_unlock();
 }
 
-void HaDeckDevice::loop() {
+void lvglDeck::loop() {
     //lv_timer_handler();
 
     unsigned long ms = esphome::millis();
@@ -155,6 +154,22 @@ void HaDeckDevice::loop() {
         time_ = ms;
         ESP_LOGCONFIG(TAG, "Free memory: %d bytes", esp_get_free_heap_size());
     }
+}
+
+void lvglDeck::set_brightness(unit8_t value) {
+    auto* backlight = panel.getBacklight();
+    if (backlight) {
+      backlight->setBrightness(brightness_);
+    }
+}
+
+void HaDeckDevice::setup() {
+    ESP_LOGCONFIG(TAG, "HaDeckDevice::Setup()");
+    deck.setup();
+}
+
+void HaDeckDevice::loop() {
+    deck.loop();
 }
 
 float HaDeckDevice::get_setup_priority() const { return setup_priority::DATA; }
@@ -165,10 +180,7 @@ uint8_t HaDeckDevice::get_brightness() {
 
 void HaDeckDevice::set_brightness(uint8_t value) {
     brightness_ = value;
-    auto* backlight = panel.getBacklight();
-    if (backlight) {
-      backlight->setBrightness(brightness_);
-    }
+    deck.set_brightness(brightness_);
 }
 
 }  // namespace hd_device
