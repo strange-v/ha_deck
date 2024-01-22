@@ -159,7 +159,7 @@ void lvglDeck::loop() {
 void lvglDeck::set_brightness(uint8_t value) {
     auto* backlight = panel.getBacklight();
     if (backlight) {
-      backlight->setBrightness(brightness_);
+      backlight->setBrightness(value);
     }
 }
 
