@@ -19,7 +19,7 @@ class lvglDeck {
   void setup();
   void loop();
   void set_brightness(unit8_t value);
-}
+};
 
 class HaDeckDevice : public Component
 {
