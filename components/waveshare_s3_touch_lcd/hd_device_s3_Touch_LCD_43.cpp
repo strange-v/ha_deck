@@ -17,6 +17,12 @@ namespace hd_device {
 #define I2C_MASTER_SDA_IO 8
 #define I2C_MASTER_SCL_IO 9
 
+/* LVGL porting configurations */
+#define LVGL_TICK_PERIOD_MS     (2)
+#define LVGL_TASK_MAX_DELAY_MS  (500)
+#define LVGL_TASK_MIN_DELAY_MS  (1)
+#define LVGL_TASK_STACK_SIZE    (4 * 1024)
+#define LVGL_TASK_PRIORITY      (2)
 #define LVGL_BUF_SIZE           (ESP_PANEL_LCD_H_RES * 20)
 
 static const char *const TAG = "HD_DEVICE";
@@ -45,6 +51,39 @@ void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data
         data->state = LV_INDEV_STATE_PR;
     } else {
         data->state = LV_INDEV_STATE_REL;
+    }
+}
+
+SemaphoreHandle_t lvgl_mux = NULL;                  // LVGL mutex
+
+void lvgl_port_lock(int timeout_ms)
+{
+    const TickType_t timeout_ticks = (timeout_ms < 0) ? portMAX_DELAY : pdMS_TO_TICKS(timeout_ms);
+    xSemaphoreTakeRecursive(lvgl_mux, timeout_ticks);
+}
+
+void lvgl_port_unlock(void)
+{
+    xSemaphoreGiveRecursive(lvgl_mux);
+}
+
+void lvgl_port_task(void *arg)
+{
+    Serial.println("Starting LVGL task");
+
+    uint32_t task_delay_ms = LVGL_TASK_MAX_DELAY_MS;
+    while (1) {
+        // Lock the mutex due to the LVGL APIs are not thread-safe
+        lvgl_port_lock(-1);
+        task_delay_ms = lv_timer_handler();
+        // Release the mutex
+        lvgl_port_unlock();
+        if (task_delay_ms > LVGL_TASK_MAX_DELAY_MS) {
+            task_delay_ms = LVGL_TASK_MAX_DELAY_MS;
+        } else if (task_delay_ms < LVGL_TASK_MIN_DELAY_MS) {
+            task_delay_ms = LVGL_TASK_MIN_DELAY_MS;
+        }
+        vTaskDelay(pdMS_TO_TICKS(task_delay_ms));
     }
 }
 
@@ -89,6 +128,13 @@ void HaDeckDevice::setup() {
     /* Start panel */
     panel.begin();
 
+    /* Create a task to run the LVGL task periodically */
+    lvgl_mux = xSemaphoreCreateRecursiveMutex();
+    xTaskCreate(lvgl_port_task, "lvgl", LVGL_TASK_STACK_SIZE, NULL, LVGL_TASK_PRIORITY, NULL);
+
+    /* Lock the mutex due to the LVGL APIs are not thread-safe */
+    lvgl_port_lock(-1);
+
     group = lv_group_create();
     lv_group_set_default(group);
 
@@ -97,6 +143,8 @@ void HaDeckDevice::setup() {
     lv_obj_set_parent(bg_image, lv_scr_act());
     lv_obj_center(bg_image);
 
+    /* Release the mutex */
+    lvgl_port_unlock();
 }
 
 void HaDeckDevice::loop() {
