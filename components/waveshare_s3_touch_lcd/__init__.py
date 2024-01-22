@@ -23,7 +23,7 @@ CONFIG_SCHEMA = cv.Schema(
 )
 
 LVGL_BUILD_FLAGS = [
-    "-D LV_USE_DEV_VERSION=1",
+//    "-D LV_USE_DEV_VERSION=1",
     "-D LV_LVGL_H_INCLUDE_SIMPLE=1",
 ]
 
