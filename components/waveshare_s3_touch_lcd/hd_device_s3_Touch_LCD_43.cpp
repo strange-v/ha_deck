@@ -31,6 +31,7 @@ static const char *const TAG = "HD_DEVICE";
 static lv_disp_draw_buf_t draw_buf;
 
 ESP_Panel panel;
+ESP_IOExpander* expander;
 
 lv_disp_t *indev_disp;
 lv_group_t *group;
@@ -82,7 +83,7 @@ void lvglDeck::setup() {
 
     panel.init();
 
-    ESP_IOExpander* expander = new ESP_IOExpander_CH422G(I2C_MASTER_NUM, ESP_IO_EXPANDER_I2C_CH422G_ADDRESS_000);
+    expander = new ESP_IOExpander_CH422G(I2C_MASTER_NUM, ESP_IO_EXPANDER_I2C_CH422G_ADDRESS_000);
     expander->init();
     expander->begin();
     expander->multiPinMode(TP_RST | LCD_BL | LCD_RST | SD_CS | USB_SEL, OUTPUT);
@@ -114,7 +115,6 @@ void lvglDeck::loop() {
 }
 
 void lvglDeck::set_brightness(uint8_t value) {
-    auto* expander = panel.getIOExpander();
     if (expander) {
       expander->digitalWrite(LCD_BL, value > 0 ? HIGH : LOW);
     }
