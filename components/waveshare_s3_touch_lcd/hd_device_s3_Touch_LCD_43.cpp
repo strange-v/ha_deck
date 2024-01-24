@@ -114,9 +114,9 @@ void lvglDeck::loop() {
 }
 
 void lvglDeck::set_brightness(uint8_t value) {
-    auto* backlight = panel.getBacklight();
-    if (backlight) {
-      backlight->setBrightness(value);
+    auto* expander = panel.getIOExpander();
+    if (expander) {
+      expander->digitalWrite(LCD_BL, value > 0 ? HIGH : LOW);
     }
 }
 
