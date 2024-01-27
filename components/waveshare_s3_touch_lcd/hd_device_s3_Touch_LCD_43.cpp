@@ -87,7 +87,7 @@ void lvglDeck::setup() {
     expander->begin();
     expander->multiPinMode(IO_EXPANDER_PIN_NUM_1 | IO_EXPANDER_PIN_NUM_2 | IO_EXPANDER_PIN_NUM_3 | IO_EXPANDER_PIN_NUM_4 | IO_EXPANDER_PIN_NUM_5, OUTPUT);
     expander->multiDigitalWrite(IO_EXPANDER_PIN_NUM_1 | IO_EXPANDER_PIN_NUM_2 | IO_EXPANDER_PIN_NUM_3 | IO_EXPANDER_PIN_NUM_4, HIGH);
-    expander->digitalWrite(USB_SEL, LOW);
+    expander->multiDigitalWrite(IO_EXPANDER_PIN_NUM_5, LOW);
 
     /* Add into panel */
     panel.addIOExpander(expander);
@@ -115,7 +115,7 @@ void lvglDeck::loop() {
 
 void lvglDeck::set_brightness(uint8_t value) {
     if (expander) {
-      expander->digitalWrite(LCD_BL, value > 0 ? HIGH : LOW);
+      expander->multiDigitalWrite(IO_EXPANDER_PIN_NUM_2, value > 0 ? HIGH : LOW);
     }
 }
 
