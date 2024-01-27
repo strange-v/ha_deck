@@ -1,6 +1,5 @@
 #include "hd_device_s3_Touch_LCD_43.h"
 #include "esphome/core/hal.h"
-#include "arduino.h"
 #include "ESP_IOExpander_Library.h"
 
 
