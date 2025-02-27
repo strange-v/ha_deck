@@ -12,6 +12,8 @@ public:
     void set_icon(std::string icon);
     void set_unit(std::string unit);
     void set_value(std::string value);
+    void set_color(std::string color);
+    void set_bg_color(std::string bg_color);
 
     void add_value_lambda(std::function<optional<std::string>()> &&f);
     void add_on_click_callback(std::function<void()> &&callback);

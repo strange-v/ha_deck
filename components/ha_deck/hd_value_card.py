@@ -20,6 +20,8 @@ ValueCardClickTrigger = ha_deck_ns.class_(
 CONF_TEXT = "text"
 CONF_UNIT = "unit"
 CONF_VALUE = "value"
+CONF_COLOR = "color"
+CONF_BG_COLOR = "bg_color"
 CONF_ON_CLICK = "on_click"
 
 VALUE_CARD_CONFIG_SCHEMA = cv.Schema(
@@ -29,6 +31,8 @@ VALUE_CARD_CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_ICON): cv.string,
         cv.Optional(CONF_UNIT): cv.string,
         cv.Optional(CONF_VALUE): cv.returning_lambda,
+        cv.Optional(CONF_COLOR): cv.string,
+        cv.Optional(CONF_BG_COLOR): cv.string,
         cv.Optional(CONF_ON_CLICK): automation.validate_automation(
             {
                 cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(ValueCardClickTrigger),
@@ -52,6 +56,12 @@ async def build_value_card(var, config):
                 config[CONF_VALUE], [], return_type=cg.optional.template(cg.std_string)
             )
         cg.add(var.add_value_lambda(val))
+
+    if color := config.get(CONF_COLOR):
+        cg.add(var.set_unit(color))
+
+    if bg_color := config.get(CONF_BG_COLOR):
+        cg.add(var.set_unit(bg_color))
 
     for conf in config.get(CONF_ON_CLICK, []):
         trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
