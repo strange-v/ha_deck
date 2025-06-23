@@ -79,7 +79,7 @@ void HaDeckDevice::setup() {
 void HaDeckDevice::loop() {
     lv_timer_handler();
 
-    unsigned long ms = millis();
+    unsigned long ms = lgfx::v1::millis();
     if (ms - time_ > 60000) {
         time_ = ms;
         ESP_LOGCONFIG(TAG, "Free memory: %d bytes", esp_get_free_heap_size());
