@@ -44,10 +44,10 @@ void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color
 
 void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 {
-    auto* touch = panel.getLcdTouch();
+    auto* touch = panel.getTouch();
     touch->readData();
     if (touch->getTouchState()) {
-        TouchPoint point = touch->getPoint();
+        esp_panel::drivers::TouchPoint point = touch->getPoint();
         data->point.x = point.x;
         data->point.y = point.y;
         data->state = LV_INDEV_STATE_PR;
