@@ -14,7 +14,7 @@ namespace hd_device {
 #define USB_SEL 5
 
 // I2C Pin define
-#define I2C_MASTER_NUM 0
+#define I2C_MASTER_NUM (i2c_port_t)0
 #define I2C_MASTER_SDA_IO 8
 #define I2C_MASTER_SCL_IO 9
 
