@@ -29,8 +29,8 @@ namespace hd_device {
 static const char *const TAG = "HD_DEVICE";
 static lv_disp_draw_buf_t draw_buf;
 
-ESP_Panel panel;
-ESP_IOExpander* expander;
+esp_panel::board::Board panel;
+esp_expander::Base* expander;
 
 lv_disp_t *indev_disp;
 lv_group_t *group;
@@ -38,14 +38,14 @@ unsigned long flush_time = 0;
 
 void IRAM_ATTR flush_pixels(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p)
 {
-    panel.getLcd()->drawBitmap(area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_p);
+    panel.getLCD()->drawBitmap(area->x1, area->y1, area->x2 + 1, area->y2 + 1, color_p);
     lv_disp_flush_ready(disp);
 }
 
 void IRAM_ATTR touchpad_read(lv_indev_drv_t *indev_driver, lv_indev_data_t *data)
 {
     auto* touch = panel.getTouch();
-    touch->readData();
+    touch->readRawData();
     if (touch->getTouchState()) {
         esp_panel::drivers::TouchPoint point = touch->getPoint();
         data->point.x = point.x;
