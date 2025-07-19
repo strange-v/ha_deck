@@ -37,7 +37,7 @@ async def to_code(config):
     core.CORE.add_job(cfg.add_includes, [esp_panel_conf])
 
     cg.add_library("lvgl/lvgl", "^8.3")
-    cg.add_library("esp_lib_utils", "^0.2.3")
+    cg.add_library("esp_lib_utils", "^0.2.3", "https://github.com/esp-arduino-libs/esp-lib-utils.git#v0.2.3")
     cg.add_library("ESP32_IO_Expander", "^0.0.4", "https://github.com/kylix-rd/ESP32_IO_Expander.git#v0.0.4")
     cg.add_library("ESP32_Display_Panel", "^0.0.3", "https://github.com/kylix-rd/ESP32_Display_Panel.git#v0.0.3")
     cg.add_platformio_option("build_flags", LVGL_BUILD_FLAGS)
