@@ -34,7 +34,7 @@ async def to_code(config):
     lv_conf_path = os.path.join(component_dir, 'lv_conf.h')
     core.CORE.add_job(cfg.add_includes, [lv_conf_path])
 
-    cg.add_library("lovyan03/LovyanGFX", "^1.1")
+    cg.add_library("lovyan03/LovyanGFX", "^1.2.7")
     cg.add_library("lvgl/lvgl", "^8.3")
     cg.add_platformio_option("build_flags", LVGL_BUILD_FLAGS)
     cg.add_platformio_option("build_flags", ["-D LV_CONF_PATH='"+lv_conf_path+"'"])

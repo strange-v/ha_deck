@@ -15,7 +15,7 @@ ChangeAction = ha_deck_ns.class_("HdSlider", automation.Action)
 
 SliderCondition = ha_deck_ns.class_("HdButtonCondition", Condition)
 SliderChangeTrigger = ha_deck_ns.class_(
-    "HdSliderChangeTrigger", automation.Trigger.template(cg.float_)
+    "HdSliderChangeTrigger", automation.Trigger.template(cg.int_)
 )
 
 CONF_TEXT = "text"

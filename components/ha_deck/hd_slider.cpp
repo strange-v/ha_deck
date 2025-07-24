@@ -11,15 +11,15 @@ void HdSlider::set_icon(std::string icon) {
     icon_ = icon;
 }
 
-void HdSlider::set_min(int min) {
+void HdSlider::set_min(int32_t min) {
     min_ = min;
 }
 
-void HdSlider::set_max(int max) {
+void HdSlider::set_max(int32_t max) {
     max_ = max;
 }
 
-void HdSlider::set_value(int value) {
+void HdSlider::set_value(int32_t value) {
     value_ = value;
     
     ESP_LOGD(this->TAG, "set_value: %d", value);
@@ -29,7 +29,7 @@ void HdSlider::set_value(int value) {
     lv_slider_set_value(slider_, value_, LV_ANIM_OFF);
 }
 
-int HdSlider::get_value() {
+int32_t HdSlider::get_value() {
     return value_;
 }
 
@@ -138,11 +138,11 @@ void HdSlider::on_value_change_(lv_event_t *e) {
     obj->value_change_callback_.call(value);
 }
 
-void HdSlider::add_value_lambda(std::function<optional<int>()> &&f) {
+void HdSlider::add_value_lambda(std::function<optional<int32_t>()> &&f) {
     this->value_fn_ = f;
 }
 
-void HdSlider::add_on_value_change_callback(std::function<void(int)> &&callback) {
+void HdSlider::add_on_value_change_callback(std::function<void(int32_t)> &&callback) {
     this->value_change_callback_.add(std::move(callback));
 }
 
